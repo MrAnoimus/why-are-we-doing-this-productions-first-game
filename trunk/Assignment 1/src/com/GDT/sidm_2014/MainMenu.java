@@ -14,6 +14,7 @@ public class MainMenu extends Activity implements OnClickListener{
 	
 	private Button btn_start;
 	private Button btn_help;
+	private Button btn_option;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,9 @@ public class MainMenu extends Activity implements OnClickListener{
 		
 		btn_help = (Button)findViewById(R.id.btn_help);
 		btn_help.setOnClickListener(this);
+		
+		btn_option = (Button)findViewById(R.id.btn_option);
+		btn_option.setOnClickListener(this);
 	}
 	
 	
@@ -41,6 +45,9 @@ public class MainMenu extends Activity implements OnClickListener{
 		}
 		else if(v == btn_help){
 			intent.setClass(this, HelpScreen.class);
+		}
+		else if(v == btn_option){
+			intent.setClass(this, OptionScreen.class);
 		}
 		startActivity(intent);
 		

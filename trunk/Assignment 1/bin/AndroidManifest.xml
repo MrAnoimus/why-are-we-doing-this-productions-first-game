@@ -36,9 +36,16 @@
             </intent-filter>
         </activity>
         
+        
+        
 		<activity
 		    android:screenOrientation="landscape"
         	android:name=".HelpScreen">
+		</activity>
+		
+		<activity
+		    android:screenOrientation="landscape"
+        	android:name=".OptionScreen">
 		</activity>
         
     </application>

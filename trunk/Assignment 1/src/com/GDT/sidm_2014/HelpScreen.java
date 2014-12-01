@@ -1,13 +1,22 @@
 package com.GDT.sidm_2014;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
-public class HelpScreen extends Activity{
+
+
+public class HelpScreen extends Activity implements OnClickListener{
+	
+
+	private Button btn_back;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +26,14 @@ public class HelpScreen extends Activity{
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hide top bar
 		setContentView(R.layout.helpscreen);
 		
+		btn_back = (Button)findViewById(R.id.btn_back);
+		btn_back.setOnClickListener(this);
+		
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			Intent intent = new Intent(HelpScreen.this, MainMenu.class);
-			startActivity(intent);
-		}
-		return true;
+	return false;
 	}
 	
 	@Override
@@ -33,4 +41,13 @@ public class HelpScreen extends Activity{
 		super.onDestroy();
 	}
 
-}
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		if(v == btn_back){
+			finish();
+		
+	}
+		}
+	}
+
