@@ -41,7 +41,7 @@ public class MainMenu extends Activity implements OnClickListener{
 		Intent intent = new Intent();
 		
 		if(v == btn_start){
-			intent.setClass(this, Splashpage.class);
+			intent.setClass(this, GamePage.class);
 		}
 		else if(v == btn_help){
 			intent.setClass(this, HelpScreen.class);

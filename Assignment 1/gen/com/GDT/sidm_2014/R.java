@@ -22,18 +22,38 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int backgnd=0x7f020000;
-        public static final int button_back=0x7f020001;
-        public static final int button_help=0x7f020002;
-        public static final int button_options=0x7f020003;
-        public static final int button_start=0x7f020004;
-        public static final int game=0x7f020005;
-        public static final int help=0x7f020006;
-        public static final int help2=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int music=0x7f020009;
-        public static final int optionsbng=0x7f02000a;
-        public static final int splash=0x7f02000b;
+        public static final int asteroid01=0x7f020000;
+        public static final int asteroid02=0x7f020001;
+        public static final int asteroid03=0x7f020002;
+        public static final int asteroid04=0x7f020003;
+        public static final int asteroid05=0x7f020004;
+        public static final int asteroid06=0x7f020005;
+        public static final int asteroid07=0x7f020006;
+        public static final int asteroid08=0x7f020007;
+        public static final int asteroid09=0x7f020008;
+        public static final int asteroid10=0x7f020009;
+        public static final int asteroid11=0x7f02000a;
+        public static final int asteroid12=0x7f02000b;
+        public static final int backgnd=0x7f02000c;
+        public static final int button_back=0x7f02000d;
+        public static final int button_help=0x7f02000e;
+        public static final int button_options=0x7f02000f;
+        public static final int button_start=0x7f020010;
+        public static final int game=0x7f020011;
+        public static final int gamescene=0x7f020012;
+        public static final int help=0x7f020013;
+        public static final int help2=0x7f020014;
+        public static final int ic_launcher=0x7f020015;
+        public static final int music=0x7f020016;
+        public static final int optionsbng=0x7f020017;
+        public static final int pause=0x7f020018;
+        public static final int pause1=0x7f020019;
+        public static final int ship2_1=0x7f02001a;
+        public static final int ship2_2=0x7f02001b;
+        public static final int ship2_3=0x7f02001c;
+        public static final int ship2_4=0x7f02001d;
+        public static final int splash=0x7f02001e;
+        public static final int star=0x7f02001f;
     }
     public static final class id {
         public static final int action_settings=0x7f080005;
