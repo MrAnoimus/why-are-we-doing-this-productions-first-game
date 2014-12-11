@@ -15,4 +15,16 @@
           android:layout_alignParentLeft="true"
           android:background="@drawable/button_back" />
 
+      <TextView
+          android:id="@+id/textView1"
+          android:layout_width="800dp"
+          android:layout_height="600dp"
+          android:text="Instructions: 
+          \nRules:
+          \n-Scan for scammers, bully&apos;s text in chatrooms
+          \n-Do not anyhow accuse people of being scammers/bullies in the chatroom
+          \n-Moderate the chatrooms
+          "
+          android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>
