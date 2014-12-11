@@ -39,35 +39,42 @@ public final class R {
         public static final int button_help=0x7f02000e;
         public static final int button_options=0x7f02000f;
         public static final int button_start=0x7f020010;
-        public static final int game=0x7f020011;
-        public static final int gamescene=0x7f020012;
-        public static final int help=0x7f020013;
-        public static final int help2=0x7f020014;
-        public static final int ic_launcher=0x7f020015;
-        public static final int music=0x7f020016;
-        public static final int optionsbng=0x7f020017;
-        public static final int pause=0x7f020018;
-        public static final int pause1=0x7f020019;
-        public static final int ship2_1=0x7f02001a;
-        public static final int ship2_2=0x7f02001b;
-        public static final int ship2_3=0x7f02001c;
-        public static final int ship2_4=0x7f02001d;
-        public static final int splash=0x7f02001e;
-        public static final int star=0x7f02001f;
+        public static final int chatroom=0x7f020011;
+        public static final int game=0x7f020012;
+        public static final int gamescene=0x7f020013;
+        public static final int help=0x7f020014;
+        public static final int help2=0x7f020015;
+        public static final int ic_launcher=0x7f020016;
+        public static final int music=0x7f020017;
+        public static final int optionsbng=0x7f020018;
+        public static final int pause=0x7f020019;
+        public static final int pause1=0x7f02001a;
+        public static final int room_alert=0x7f02001b;
+        public static final int ship2_1=0x7f02001c;
+        public static final int ship2_2=0x7f02001d;
+        public static final int ship2_3=0x7f02001e;
+        public static final int ship2_4=0x7f02001f;
+        public static final int splash=0x7f020020;
+        public static final int star=0x7f020021;
     }
     public static final class id {
-        public static final int action_settings=0x7f080005;
+        public static final int action_settings=0x7f080009;
         public static final int btn_back=0x7f080000;
-        public static final int btn_help=0x7f080001;
-        public static final int btn_option=0x7f080002;
-        public static final int btn_start=0x7f080003;
-        public static final int seekBar1=0x7f080004;
+        public static final int btn_help=0x7f080002;
+        public static final int btn_option=0x7f080003;
+        public static final int btn_start=0x7f080004;
+        public static final int radioButton1=0x7f080007;
+        public static final int radioButton2=0x7f080008;
+        public static final int seekBar1=0x7f080005;
+        public static final int textView1=0x7f080001;
+        public static final int textView2=0x7f080006;
     }
     public static final class layout {
-        public static final int helpscreen=0x7f030000;
-        public static final int mainmenu=0x7f030001;
-        public static final int optionscreen=0x7f030002;
-        public static final int splashpage=0x7f030003;
+        public static final int gamepanelsurfaceview=0x7f030000;
+        public static final int helpscreen=0x7f030001;
+        public static final int mainmenu=0x7f030002;
+        public static final int optionscreen=0x7f030003;
+        public static final int splashpage=0x7f030004;
     }
     public static final class menu {
         public static final int main_menu=0x7f070000;

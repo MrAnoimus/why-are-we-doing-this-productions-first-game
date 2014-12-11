@@ -1,5 +1,6 @@
 package com.GDT.sidm_2014; // Note: Differs with your project name
 
+import android.app.Activity;
 import java.util.Random;
 
 import android.content.Context;
@@ -7,14 +8,31 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
-	// Implement this interface to receive information about changes to the surface.
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+//Implement this interface to receive information about changes to the surface.
 	
+public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+	//private Button Room1;
+	
+	//protected void onCreate(Bundle savedInstanceState) {
+	///	super.onCreate(savedInstanceState);
+				
+	//	requestWindowFeature(Window.FEATURE_NO_TITLE);// hide title
+	  //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hide top bar
+		//setContentView(R.layout.helpscreen);
+		
+	//	btn_back = (Button)findViewById(R.id.btn_back);
+	//	btn_back.setOnClickListener(this);
+		
+	//}
 		private GameThread myThread = null; // Thread to control the rendering
 		
 		// 1) Variables used for background rendering 
@@ -52,7 +70,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			getHolder().addCallback(this);
 			
 			// 2)load the image when this class is being instantiated
-			bg = BitmapFactory.decodeResource(getResources(),R.drawable.gamescene);
+			bg = BitmapFactory.decodeResource(getResources(),R.drawable.help2);
 			scaleBg= Bitmap.createScaledBitmap(bg, (int)(ScreenWidth),(int)(ScreenHeight), true);
 			// 7) Load the images of the spaceships
 			
@@ -90,6 +108,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				myThread.start();
 			}
 		}
+		
 		
 		public void surfaceDestroyed(SurfaceHolder holder){
 			// Destroy the thread 
