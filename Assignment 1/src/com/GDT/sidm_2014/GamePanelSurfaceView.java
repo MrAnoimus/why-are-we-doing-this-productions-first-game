@@ -178,7 +178,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		    // 4) An update function to update the game 
 			
 			bgX-=8; // Change the number of panning speed if number is larger, it moves faster.
-			if (bgX<-1280) 
+			if (bgX<-ScreenWidth)
 			{ // Check if reaches 1280, if does, set bgX = 0. 
 				bgX=0; 
 				}
@@ -203,7 +203,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		// 3) Re-draw 2nd image after the 1st image ends	
 
 				canvas.drawBitmap(bg,bgX,bgY,null);
-				canvas.drawBitmap(bg,bgX+1920,bgY,null);
+				canvas.drawBitmap(bg,bgX+ScreenWidth,bgY,null);
 	
 		
 		// 8) Draw the spaceships
