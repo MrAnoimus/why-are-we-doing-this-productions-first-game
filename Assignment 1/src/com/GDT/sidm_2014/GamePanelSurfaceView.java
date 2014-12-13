@@ -1,6 +1,7 @@
 package com.GDT.sidm_2014; // Note: Differs with your project name
 
 import android.app.Activity;
+
 import java.util.Random;
 
 import android.content.Context;
@@ -33,10 +34,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 	//	btn_back.setOnClickListener(this);
 		
 	//}
+		private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
-		
+		private Objects PauseB1;
+		private Objects[] ChatRooms = new Objects[4];
+		private Objects PauseB2;
 		// 1) Variables used for background rendering 
 		private Bitmap bg;
+		private SpriteAnim P_sprite;
 		private Bitmap scaleBg;
 		private short bgX=0, bgY=0;
 		private short mX = 0, mY = 0;
@@ -91,8 +96,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			stone[10] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid11); 
 			stone[11] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid12);
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star); 
-		
+			
+			P_sprite = new SpriteAnim(BitmapFactory.decodeResource(getResources(), R.drawable.player),200,300,28,5);
 			// Create the game loop thread
+			
+			PauseB1 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause1),200,300);
+			
+			PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
+			
+			
+			ChatRooms[0] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
+			ChatRooms[1] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
+			ChatRooms[2] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
+			ChatRooms[3] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
+			
 			myThread = new GameThread(getHolder(), this);
 			
 			// Make the GamePanel focusable so it can handle events
@@ -177,16 +194,18 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		public void update(){
 		    // 4) An update function to update the game 
 			
-			bgX-=8; // Change the number of panning speed if number is larger, it moves faster.
-			if (bgX<-ScreenWidth)
+
+			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
+			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
-				bgX=0; 
+				bgY=0; 
 				}
 			shipIndex++; 
 			shipIndex%=4;
 			stoneIndex++; 
 			stoneIndex%=12;
 			
+			P_sprite.update(System.currentTimeMillis());
 			}
 		    // 9) Update the spaceship images / shipIndex so that the animation will occur.
 				
@@ -202,8 +221,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 		// 3) Re-draw 2nd image after the 1st image ends	
 
+				canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
 				canvas.drawBitmap(bg,bgX,bgY,null);
-				canvas.drawBitmap(bg,bgX+ScreenWidth,bgY,null);
 	
 		
 		// 8) Draw the spaceships
@@ -230,6 +249,25 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				
 			}
 			displaytext(canvas);
+			
+			P_sprite.draw(canvas);
+			P_sprite.setY(600);
+			
+			for(int i = 0; i < 4; ++i){
+				canvas.drawBitmap(ChatRooms[i].getBitmap(), ChatRooms[i].getX(), ChatRooms[i].getY(), null);
+			}
+
+			/*(if(pausepress==true)
+			{
+				canvas.drawBitmap(PauseB2.getBitmap(), PauseB2.getX(), PauseB2.getY(), null);
+				
+			}
+			else
+			{
+				canvas.drawBitmap(PauseB1.getBitmap(), PauseB1.getX(), PauseB1.getY(), null);
+				pausepress=true;
+			}*/
+			
 		}
 		
 		@Override
@@ -242,6 +280,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			switch(action)
 			{
 			case MotionEvent.ACTION_DOWN:
+				
+				for(int i = 0; i < 4; ++i){
+					if(CheckCollision(ChatRooms[i].getX(),ChatRooms[i].getY(),ChatRooms[i].getSpriteWidth(),ChatRooms[i].getSpriteHeight(), X,Y,0,0))
+					{
+						hit--;
+						Scoreno +=10;
+					}
+				}
 				if(event.getAction() == MotionEvent.ACTION_DOWN)
 				{ 
 				//check if the image is clicked on
