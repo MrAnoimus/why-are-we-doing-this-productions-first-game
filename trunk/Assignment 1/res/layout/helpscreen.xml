@@ -17,14 +17,15 @@
 
       <TextView
           android:id="@+id/textView1"
-          android:layout_width="800dp"
-          android:layout_height="600dp"
-          android:text="Instructions: 
-          \nRules:
+          android:layout_width="400dp"
+          android:layout_height="230dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:layout_marginRight="50dp"
+          android:text="Instructions: 		   \nRules:
           \n-Scan for scammers, bully&apos;s text in chatrooms
           \n-Do not anyhow accuse people of being scammers/bullies in the chatroom
-          \n-Moderate the chatrooms
-          "
-          android:textAppearance="?android:attr/textAppearanceLarge" />
+          \n-Moderate the chatrooms"
+          android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
