@@ -15,8 +15,6 @@ public class GameThread extends Thread {
 			private SurfaceHolder holder;
 			
 			// Flag to hold game state 
-			
-
 			private boolean isRun;
 			private boolean isPause = false;
 			long curr = 0;

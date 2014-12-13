@@ -49,8 +49,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		int ScreenHeight ;
 		int aX;
 		int aY;
-		int Scoreno;
-		int hit=3;
+		int Scoreno =100;
+		int hit=4;
+		int touches=0;
+		private Button btn_back;
 		// 5) bitmap array to stores 4 images of the spaceship
 		private Bitmap[ ] star = new Bitmap[1];
 		private Bitmap[ ] ship = new Bitmap[4];
@@ -105,17 +107,18 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
 			
 			
-			ChatRooms[0] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
-			ChatRooms[1] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
-			ChatRooms[2] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
-			ChatRooms[3] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
+			ChatRooms[3] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
+			ChatRooms[2] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
+			ChatRooms[0] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
+			ChatRooms[1] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
 			
 			myThread = new GameThread(getHolder(), this);
 			
 			// Make the GamePanel focusable so it can handle events
 			setFocusable(true);
 		}
-		
+	
+
 		//must implement inherited abstract methods
 		public void surfaceCreated(SurfaceHolder holder){
 			// Create the thread 
@@ -123,6 +126,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				myThread = new GameThread(getHolder(), this);
 				myThread.startRun(true);
 				myThread.start();
+
 			}
 		}
 		
@@ -152,11 +156,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		public void displaytext(Canvas canvas)
 		{
 			Paint paint = new Paint();
-			paint.setARGB(255, 0, 0, 0);
+			paint.setARGB(255, 255, 255, 255);
 			paint.setStrokeWidth(100);
 			paint.setTextSize(30);
-			
-			canvas.drawText("Score:"+" " +Scoreno, 600, 50, paint);
+			canvas.drawText("Score:"+" " +Scoreno, ScreenWidth/2, 50, paint);
 		}
 		public boolean CheckCollision(int x1, int y1 ,int w1,int h1, int x2, int y2, int w2, int h2)
 		{
@@ -194,18 +197,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		public void update(){
 		    // 4) An update function to update the game 
 			
-
+			
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
 				bgY=0; 
 				}
-			shipIndex++; 
+			/*shipIndex++; 
 			shipIndex%=4;
 			stoneIndex++; 
 			stoneIndex%=12;
 			
 			P_sprite.update(System.currentTimeMillis());
+			
+			 */
 			}
 		    // 9) Update the spaceship images / shipIndex so that the animation will occur.
 				
@@ -221,15 +226,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 		// 3) Re-draw 2nd image after the 1st image ends	
 
-				canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
 				canvas.drawBitmap(bg,bgX,bgY,null);
-	
-		
+				canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
+				displaytext(canvas);
 		// 8) Draw the spaceships
-			
+			/*
 			canvas.drawBitmap(ship[shipIndex], mX, mY, null);
 			canvas.drawBitmap(stone[shipIndex], aX, aY, null);
-			
+			*/
 			if(hit==3)
 			{
 				canvas.drawBitmap(star[0], 28, 10,null);
@@ -248,26 +252,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		
 				
 			}
-			displaytext(canvas);
-			
-			P_sprite.draw(canvas);
+			/*P_sprite.draw(canvas);
 			P_sprite.setY(600);
-			
-			for(int i = 0; i < 4; ++i){
+			*/
+			for(int i = touches; i < 4; ++i){
 				canvas.drawBitmap(ChatRooms[i].getBitmap(), ChatRooms[i].getX(), ChatRooms[i].getY(), null);
 			}
 
-			/*(if(pausepress==true)
-			{
-				canvas.drawBitmap(PauseB2.getBitmap(), PauseB2.getX(), PauseB2.getY(), null);
-				
-			}
-			else
-			{
-				canvas.drawBitmap(PauseB1.getBitmap(), PauseB1.getX(), PauseB1.getY(), null);
-				pausepress=true;
-			}*/
-			
+			displaytext(canvas);
 		}
 		
 		@Override
@@ -281,11 +273,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			{
 			case MotionEvent.ACTION_DOWN:
 				
-				for(int i = 0; i < 4; ++i){
+				for(int i = touches; i < 4; ++i){
 					if(CheckCollision(ChatRooms[i].getX(),ChatRooms[i].getY(),ChatRooms[i].getSpriteWidth(),ChatRooms[i].getSpriteHeight(), X,Y,0,0))
 					{
-						hit--;
+						
+						if(hit>0)
+						{
 						Scoreno +=10;
+						hit--;
+						touches++;
+						}
 					}
 				}
 				if(event.getAction() == MotionEvent.ACTION_DOWN)
