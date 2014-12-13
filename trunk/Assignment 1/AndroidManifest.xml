@@ -47,10 +47,11 @@
 		    android:screenOrientation="landscape"
         	android:name=".OptionScreen">
 		</activity>
-        <activity android:name=".GamePage" >
-            android:screenOrientation="landscape"
+        <activity android:name=".GamePage"
+             android:screenOrientation="landscape"  >
+            
              <intent-filter> 
-                 
+                
                  <action android:name="android.intent.action.MAIN" />
                  
                   <category android:name="android.intent.category.default" /> 

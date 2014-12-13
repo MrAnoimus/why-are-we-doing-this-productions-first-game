@@ -1,4 +1,6 @@
 package com.GDT.sidm_2014; // Note: Differs with your project name
+import java.util.Objects;
+
 import android.view.SurfaceHolder;
 import android.graphics.Canvas;
 
@@ -13,8 +15,10 @@ public class GameThread extends Thread {
 			private SurfaceHolder holder;
 			
 			// Flag to hold game state 
-			private boolean isRun;
 			
+
+			private boolean isRun;
+			private boolean isPause = false;
 			long curr = 0;
 			long prev = 0;
 			short fps = 20;
@@ -26,7 +30,24 @@ public class GameThread extends Thread {
 				this.myView = myView;
 				this.holder = holder;
 			}
-			
+			public void pause(){
+				synchronized(holder)
+				{
+					isPause=true;
+				}
+			}
+			public void unPause()
+			{
+				synchronized(holder)
+				{
+					isPause=false;
+					holder.notifyAll();
+				}
+			}
+			public boolean getPause()
+			{
+				return isPause;
+			}
 			public void startRun(boolean r){
 				isRun = r;
 			}
@@ -40,13 +61,30 @@ public class GameThread extends Thread {
 					if ((long)(curr-prev)>(long)(1000/fps)){
 						try {
 							c = holder.lockCanvas();
-							synchronized(holder){
-								
-							if(myView!=null)
-							
-								myView.update();
-								myView.doDraw(c); 
-							}		
+							synchronized(holder){		
+								if(myView!=null)
+								{
+									if(getPause()==false)
+									{
+										myView.update();
+										myView.doDraw(c); 
+									}
+								}
+							}
+							synchronized(holder)
+							{
+								while(getPause()==true)
+								{
+									try {
+										holder.wait();
+										
+									}
+									catch(InterruptedException e)
+									{
+										
+									}
+								}
+							}
 						}
 						finally{
 							if (c!=null){
