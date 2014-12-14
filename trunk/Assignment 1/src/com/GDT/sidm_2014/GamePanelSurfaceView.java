@@ -47,7 +47,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		
 		// 1) Variables used for background rendering 
 		private Bitmap bg;
-		private SpriteAnim P_sprite;
 		private Bitmap scaleBg;
 		private short bgX=0, bgY=0;
 		private short mX = 0, mY = 0;
@@ -57,14 +56,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		int aY;
 		int Scoreno =100;
 		int hit=4;
-		private Button btn_back;
-		// 5) bitmap array to stores 4 images of the spaceship
-		private Bitmap[ ] star = new Bitmap[1];
-		private Bitmap[ ] ship = new Bitmap[4];
-		private Bitmap[ ] stone = new Bitmap[12];
-		// 6) Variable as an index to keep track of the spaceship images
-		private short shipIndex = 0;
-		private short stoneIndex = 0;
 		
 		//constructor for this GamePanelSurfaceView class
 		public GamePanelSurfaceView (Context context){
@@ -83,26 +74,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			bg = BitmapFactory.decodeResource(getResources(),R.drawable.help2);
 			scaleBg= Bitmap.createScaledBitmap(bg, (int)(ScreenWidth),(int)(ScreenHeight), true);
 			
-			// 7) Load the images of the spaceships
-			ship[0] = BitmapFactory.decodeResource(getResources(),R.drawable.ship2_1); 
-			ship[1] = BitmapFactory.decodeResource(getResources(), R.drawable.ship2_2); 
-			ship[2] = BitmapFactory.decodeResource(getResources(), R.drawable.ship2_3); 
-			ship[3] = BitmapFactory.decodeResource(getResources(), R.drawable.ship2_4);
-			stone[0] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid01); 
-			stone[1] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid02); 
-			stone[2] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid03); 
-			stone[3] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid04);
-			stone[4] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid05); 
-			stone[5] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid06); 
-			stone[6] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid07); 
-			stone[7] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid08);
-			stone[8] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid09); 
-			stone[9] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid10); 
-			stone[10] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid11); 
-			stone[11] = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid12);
-			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star); 
-			
-			P_sprite = new SpriteAnim(BitmapFactory.decodeResource(getResources(), R.drawable.player),200,300,28,5);
 			// Create the game loop thread
 			
 			PauseB1 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause1),200,300);
@@ -196,10 +167,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return false;
 		}
 		
-		public void update(){
-		    // 4) An update function to update the game 
-			
-			
+		public void update(){			
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
@@ -225,15 +193,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			for(int i = 0; i < 4; ++i){
 				theChatRooms[i].update();
 			}
-			
-			/*shipIndex++; 
-			shipIndex%=4;
-			stoneIndex++; 
-			stoneIndex%=12;
-			
-			P_sprite.update(System.currentTimeMillis());
-			
-			 */
 		}
 				
 		
@@ -245,38 +204,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			{
 				return;
 			}
-			
-		// 3) Re-draw 2nd image after the 1st image ends	
 
-				canvas.drawBitmap(bg,bgX,bgY,null);
-				canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
-				displaytext(canvas);
-		// 8) Draw the spaceships
-			/*
-			canvas.drawBitmap(ship[shipIndex], mX, mY, null);
-			canvas.drawBitmap(stone[shipIndex], aX, aY, null);
-			*/
-			if(hit==3)
-			{
-				canvas.drawBitmap(star[0], 28, 10,null);
-				canvas.drawBitmap(star[0], 58, 10,null);
-				canvas.drawBitmap(star[0], 88, 10,null);
-			}
-			if(hit==2)
-			{
-				canvas.drawBitmap(star[0], 28, 10,null);
-				canvas.drawBitmap(star[0], 58, 10,null);
-				
-			}
-			if(hit==1)
-			{
-				canvas.drawBitmap(star[0], 28, 10,null);
-		
-				
-			}
-			/*P_sprite.draw(canvas);
-			P_sprite.setY(600);
-			*/
+			canvas.drawBitmap(bg,bgX,bgY,null);
+			canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
+			displaytext(canvas);
 			
 			//Draw chatrooms
 			for(int i = 0; i < 4; ++i){
