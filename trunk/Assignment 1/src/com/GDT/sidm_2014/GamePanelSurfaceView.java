@@ -21,19 +21,7 @@ import android.widget.Button;
 //Implement this interface to receive information about changes to the surface.
 	
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
-	//private Button Room1;
-	
-	//protected void onCreate(Bundle savedInstanceState) {
-	///	super.onCreate(savedInstanceState);
-				
-	//	requestWindowFeature(Window.FEATURE_NO_TITLE);// hide title
-	  //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hide top bar
-		//setContentView(R.layout.helpscreen);
-		
-	//	btn_back = (Button)findViewById(R.id.btn_back);
-	//	btn_back.setOnClickListener(this);
-		
-	//}
+
 		private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
 		private Objects PauseB1;
@@ -49,13 +37,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		private Bitmap bg;
 		private Bitmap scaleBg;
 		private short bgX=0, bgY=0;
-		private short mX = 0, mY = 0;
 		int ScreenWidth ;
 		int ScreenHeight ;
-		int aX;
-		int aY;
 		int Scoreno =100;
-		int hit=4;
 		
 		//constructor for this GamePanelSurfaceView class
 		public GamePanelSurfaceView (Context context){
@@ -220,7 +204,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		@Override
 		public boolean onTouchEvent(MotionEvent event){
 		
-		// 10) In event of touch on screen, the spaceship will relocate to the point of touch
 			int action = event.getAction();//check for action of touch
 			short X = (short) event.getX(); 
 			short Y = (short) event.getY(); 
@@ -248,26 +231,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					break;
 				
 			case MotionEvent.ACTION_MOVE:
-				// New location where the image to land on 
-					mX = (short)(X - ship[shipIndex].getWidth()/2); 
-					mY = (short)(Y - ship[shipIndex].getHeight()/2); 
-					if(CheckCollision(mX,mY, ship[shipIndex].getWidth(),ship[shipIndex].getHeight(),aX,aY,stone[stoneIndex].getWidth(),stone[stoneIndex].getHeight()))
-					{
-						hit--;
-						Scoreno +=10;
-						Random r= new Random();
-						aX= r.nextInt(ScreenWidth);
-						aY = r.nextInt(ScreenHeight);
-					}
-			//manage move
+
 				break;
 			}
-
-			//In the event to locate the location where touch action occurs 
-			
-			
-			
-			//check if ship and stone collide
 			
 			return true;
 		}
