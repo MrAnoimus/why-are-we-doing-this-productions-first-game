@@ -40,6 +40,7 @@ public class ChatRoom {
 	
 	public boolean TrySetActive(){
 		//3% chance to change chatroom to warning mode
+
 		if(warning == false){
 			Random r = new Random();
 			if(r.nextInt(100) < 3){
@@ -48,6 +49,7 @@ public class ChatRoom {
 				return true;
 			}
 		}
+		
 		
 		return false;
 	}
