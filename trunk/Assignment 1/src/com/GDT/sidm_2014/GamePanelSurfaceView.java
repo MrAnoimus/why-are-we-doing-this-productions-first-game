@@ -37,8 +37,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
 		private Objects PauseB1;
-		private Objects[] ChatRooms = new Objects[4];
 		private Objects PauseB2;
+		
+		//Chatroom stuff
+		private ChatRoom[] theChatRooms = new ChatRoom[4];
+		private static long timeLastCheck = System.currentTimeMillis();	
+		private int maxWarnings = 2;
+		private int activeWarningRooms = 0;
+		
 		// 1) Variables used for background rendering 
 		private Bitmap bg;
 		private SpriteAnim P_sprite;
@@ -51,7 +57,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		int aY;
 		int Scoreno =100;
 		int hit=4;
-		int touches=0;
 		private Button btn_back;
 		// 5) bitmap array to stores 4 images of the spaceship
 		private Bitmap[ ] star = new Bitmap[1];
@@ -60,18 +65,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		// 6) Variable as an index to keep track of the spaceship images
 		private short shipIndex = 0;
 		private short stoneIndex = 0;
+		
 		//constructor for this GamePanelSurfaceView class
 		public GamePanelSurfaceView (Context context){
-			
-			
 			// Context is the current state of the application/object
 			super(context);
-//set things to get screen size
 			
+			//set things to get screen size
 			DisplayMetrics metrics= context.getResources().getDisplayMetrics();
 			ScreenWidth = metrics.widthPixels;
-			ScreenHeight = metrics.heightPixels;
-			
+			ScreenHeight = metrics.heightPixels;			
 			
 			// Adding the callback (this) to the surface holder to intercept events
 			getHolder().addCallback(this);
@@ -79,8 +82,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			// 2)load the image when this class is being instantiated
 			bg = BitmapFactory.decodeResource(getResources(),R.drawable.help2);
 			scaleBg= Bitmap.createScaledBitmap(bg, (int)(ScreenWidth),(int)(ScreenHeight), true);
-			// 7) Load the images of the spaceships
 			
+			// 7) Load the images of the spaceships
 			ship[0] = BitmapFactory.decodeResource(getResources(),R.drawable.ship2_1); 
 			ship[1] = BitmapFactory.decodeResource(getResources(), R.drawable.ship2_2); 
 			ship[2] = BitmapFactory.decodeResource(getResources(), R.drawable.ship2_3); 
@@ -103,14 +106,13 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			// Create the game loop thread
 			
 			PauseB1 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause1),200,300);
-			
 			PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
 			
 			
-			ChatRooms[3] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
-			ChatRooms[2] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
-			ChatRooms[0] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
-			ChatRooms[1] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
+			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
+			theChatRooms[1] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
+			theChatRooms[2] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
+			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
 			
 			myThread = new GameThread(getHolder(), this);
 			
@@ -202,7 +204,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
 				bgY=0; 
+			}
+			
+			//Update chatrooms every second
+			if(System.currentTimeMillis()-timeLastCheck > 1000){
+				for(int i = 0; i < 4; ++i){
+					//Only update rooms when there isn't a max number of active rooms
+					if(activeWarningRooms < maxWarnings){
+						if(theChatRooms[i].update()){
+							//A chatroom becomes active
+							++activeWarningRooms;
+						}
+					}
 				}
+			}
 			/*shipIndex++; 
 			shipIndex%=4;
 			stoneIndex++; 
@@ -211,8 +226,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			P_sprite.update(System.currentTimeMillis());
 			
 			 */
-			}
-		    // 9) Update the spaceship images / shipIndex so that the animation will occur.
+		}
 				
 		
 		// Rendering is done on Canvas
@@ -255,8 +269,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			/*P_sprite.draw(canvas);
 			P_sprite.setY(600);
 			*/
-			for(int i = touches; i < 4; ++i){
-				canvas.drawBitmap(ChatRooms[i].getBitmap(), ChatRooms[i].getX(), ChatRooms[i].getY(), null);
+			
+			//Draw chatrooms
+			for(int i = 0; i < 4; ++i){
+				theChatRooms[i].draw(canvas);
 			}
 
 			displaytext(canvas);
@@ -273,15 +289,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			{
 			case MotionEvent.ACTION_DOWN:
 				
-				for(int i = touches; i < 4; ++i){
-					if(CheckCollision(ChatRooms[i].getX(),ChatRooms[i].getY(),ChatRooms[i].getSpriteWidth(),ChatRooms[i].getSpriteHeight(), X,Y,0,0))
+				for(int i = 0; i < 4; ++i){
+					Objects tempObj = theChatRooms[i].getObjects();
+					if(CheckCollision(tempObj.getX(),tempObj.getY(),tempObj.getSpriteWidth(),tempObj.getSpriteHeight(), X,Y,0,0))
 					{
 						
-						if(hit>0)
+						if(theChatRooms[i].getWarning())
 						{
-						Scoreno +=10;
-						hit--;
-						touches++;
+							Scoreno +=10;
+							theChatRooms[i].setWarning(false);
+							--activeWarningRooms;
 						}
 					}
 				}
