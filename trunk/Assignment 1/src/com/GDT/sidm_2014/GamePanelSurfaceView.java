@@ -206,18 +206,26 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				bgY=0; 
 			}
 			
-			//Update chatrooms every second
+			//try and activate chatrooms every second
 			if(System.currentTimeMillis()-timeLastCheck > 1000){
 				for(int i = 0; i < 4; ++i){
 					//Only update rooms when there isn't a max number of active rooms
 					if(activeWarningRooms < maxWarnings){
-						if(theChatRooms[i].update()){
+						if(theChatRooms[i].TrySetActive()){
 							//A chatroom becomes active
 							++activeWarningRooms;
 						}
 					}
+					else
+						break;
 				}
 			}
+			
+			//Update chatrooms
+			for(int i = 0; i < 4; ++i){
+				theChatRooms[i].update();
+			}
+			
 			/*shipIndex++; 
 			shipIndex%=4;
 			stoneIndex++; 

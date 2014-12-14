@@ -12,7 +12,7 @@ import android.graphics.Paint;
 public class ChatRoom {
 	private Objects theChatRoom;
 	private boolean warning = false;
-	private long timeLastCheck;
+	private long timeActive = 0;
 	
 	//To change texture color
 	private LightingColorFilter FilterWhite = new LightingColorFilter(Color.WHITE, 1),
@@ -22,8 +22,6 @@ public class ChatRoom {
 	
 	public ChatRoom(Bitmap bitmap, int x, int y){
 		theChatRoom = new Objects(bitmap, x, y);
-		
-		timeLastCheck = System.currentTimeMillis();
 	}
 	
 	public Objects getObjects(){
@@ -32,24 +30,29 @@ public class ChatRoom {
 	public boolean getWarning(){
 		return warning;
 	}
+	public long getTimeActive(){
+		return timeActive;
+	}
 	
 	public void setWarning(boolean warning){
 		this.warning = warning;
 	}
 	
-	public boolean update(){
+	public boolean TrySetActive(){
 		//3% chance to change chatroom to warning mode
 		if(warning == false){
-			if(System.currentTimeMillis() - timeLastCheck > 1000){
-				Random r = new Random();
-				if(r.nextInt(100) < 3){
-					warning = true;
-					return true;
-				}
+			Random r = new Random();
+			if(r.nextInt(100) < 3){
+				warning = true;
+				timeActive = System.currentTimeMillis();
+				return true;
 			}
 		}
 		
 		return false;
+	}
+	
+	public void update(){
 	}
 	
 	public void draw(Canvas canvas){
