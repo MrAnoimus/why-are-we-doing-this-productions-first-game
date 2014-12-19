@@ -33,7 +33,16 @@ public class OptionScreen extends Activity implements OnClickListener{
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-	return false;
+	//return false;
+		int action = event.getAction();
+		switch(action)
+		{
+		case MotionEvent.ACTION_DOWN:
+			break;
+		case MotionEvent.ACTION_MOVE:
+			break;
+		}
+		return true;
 	}
 	
 	@Override
@@ -48,6 +57,7 @@ public class OptionScreen extends Activity implements OnClickListener{
 			finish();
 		
 	}
+		
 		}
 	}
 

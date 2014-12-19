@@ -11,8 +11,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -24,10 +29,16 @@ import android.widget.Button;
 	
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
-		private boolean pausepress=true;
+		public float Volumes=1.0f;
+		private SoundPool sounds;
+		private int soundcorrect, soundwrong, soundbonus;
+
+		public Vibrator v;
+		MediaPlayer bgm;
+		//private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
-		private Objects PauseB1;
-		private Objects PauseB2;
+		//private Objects PauseB1;
+		//private Objects PauseB2;
 		private Bitmap[] star = new Bitmap[1];
 		//Chatroom stuff
 		private ChatRoom[] theChatRooms = new ChatRoom[4];
@@ -37,7 +48,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		
 		// 1) Variables used for background rendering 
 		private Bitmap bg;
-		private Bitmap scaleBg;
+		//private Bitmap scaleBg;
 		private short bgX=0, bgY=0;
 		int ScreenWidth ;
 		int ScreenHeight ;
@@ -58,12 +69,12 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 			// 2)load the image when this class is being instantiated
 			bg = BitmapFactory.decodeResource(getResources(),R.drawable.help2);
-			scaleBg= Bitmap.createScaledBitmap(bg, (int)(ScreenWidth),(int)(ScreenHeight), true);
+			//scaleBg= Bitmap.createScaledBitmap(bg, (int)(ScreenWidth),(int)(ScreenHeight), true);
 			
 			// Create the game loop thread
 			
-			PauseB1 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause1),200,300);
-			PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
+			//PauseB1 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause1),200,300);
+			//PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
 			
 			//Back = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_back),10,300);
 			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
@@ -74,6 +85,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 			myThread = new GameThread(getHolder(), this);
 			
+			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
+			
+			bgm= MediaPlayer.create(context, R.raw.friction);
+			bgm.setVolume(1.0f, 1.0f);
+			bgm.start();
+			
+			soundcorrect = sounds.load(context,  R.raw.correct,1);
+			soundwrong = sounds.load(context,R.raw.incorrect, 1);
 			// Make the GamePanel focusable so it can handle events
 			setFocusable(true);
 		}
@@ -107,7 +126,11 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					
 				}
 			}
-			
+			bgm.stop();
+			bgm.release();
+			sounds.unload(soundcorrect);
+			sounds.unload(soundwrong);
+			sounds.release();
 		}
 
 		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height){
@@ -163,7 +186,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return false;
 		}
 		
-		public void update(){			
+		public void update(){	
+			bgm.setVolume(Volumes, Volumes);
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
@@ -265,7 +289,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		//	canvas.drawBitmap(Back.getBitmap(), 10, ScreenHeight-(ScreenHeight/4), null);
 			
 		}
-		
+		public void startvibrate()
+		{
+			long pattern[]={0,100,000};
+			v = (Vibrator)getContext().getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(pattern,-1);
+			
+		}
+		public void stopVibrate(){
+			v.cancel();
+		}
 		@Override
 		public boolean onTouchEvent(MotionEvent event){
 		
@@ -283,14 +316,22 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						
 						if(theChatRooms[i].getWarning())
 						{
+							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
+							startvibrate();
 							Scoreno +=10;
 							theChatRooms[i].setWarning(false);
 							--activeWarningRooms;
+							
 						}
 						else
 						{
+							//sounds.play(soundwrong, 1.0f, 1.0f, 0, 0, 1.5f);
 							Scoreno -=10;
 						}
+					}
+					else
+					{
+						//stopVibrate();
 					}
 
 				}
@@ -303,8 +344,12 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			case MotionEvent.ACTION_MOVE:
 
 				break;
+			case MotionEvent.ACTION_UP:
+				stopVibrate();
+				break;
 			}
 			
 			return true;
 		}
+		
 }
