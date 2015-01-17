@@ -25,21 +25,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
-public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener{
+public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener, OnSeekBarChangeListener{
+		public static MediaPlayer bgm;
 		public int aX = 80, aY=80;
 		public int bX = 0, bY=50;
-		public float Volumes=1.0f;
 		private SoundPool sounds;
 		private int soundcorrect, soundwrong, soundbonus;
 		private final SensorManager sensor;
 		public Vibrator v;
-		MediaPlayer bgm;
+		public static float BgmVolume=0.0f;
 		//private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
 		//private Objects PauseB1;
@@ -97,19 +99,18 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 			myThread = new GameThread(getHolder(), this);
 			
-			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
-			
-			bgm= MediaPlayer.create(context, R.raw.friction);
-			bgm.setVolume(1.0f, 1.0f);
+			bgm = MediaPlayer.create(context, R.raw.friction);
+			bgm.setVolume(BgmVolume, BgmVolume);
 			bgm.start();
 			
+			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
 			soundcorrect = sounds.load(context,  R.raw.correct,1);
 			soundwrong = sounds.load(context,R.raw.incorrect, 1);
 			// Make the GamePanel focusable so it can handle events
 			setFocusable(true);
 		}
-	
 
+		
 		//must implement inherited abstract methods
 		public void surfaceCreated(SurfaceHolder holder){
 			// Create the thread 
@@ -138,8 +139,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					
 				}
 			}
-			bgm.stop();
-			bgm.release();
+			
 			sounds.unload(soundcorrect);
 			sounds.unload(soundwrong);
 			sounds.release();
@@ -199,7 +199,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		}
 		
 		public void update(){	
-			bgm.setVolume(Volumes, Volumes);
+			
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
@@ -371,23 +371,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		public void onSensorChanged(SensorEvent event) {
 			// TODO Auto-generated method stub
 			float [ ] SenseData = event.values;
-			if (CheckCollision(bX,bY,star[1].getWidth(),star[1].getHeight(),
-			aX,aY,star[0].getWidth(),star[0].getHeight()))
-			{
-					Random r = new Random();
-					bX = r.nextInt(ScreenWidth);
-					bY = r.nextInt(ScreenHeight);
-			}
 			// Check X axis values i.e. 0 = X axis, 1 = Y axis.
 			if(SenseData[0] >= 1){ // if positive x-data exceeds +1,
-			aY+= 10; // object moves leftwards.
+			//aY+= 10; // object moves leftwards.
 			if(aY + star[0].getHeight() > ScreenHeight)
 			{
 				aY = ScreenHeight-10;
 			}
 			}
 			else if(SenseData[0] <= -1){ // if negative x-data exceeds -1,
-			aY-= 10; // object moves rightwards.
+			//aY-= 10; // object moves rightwards.
 			if((aY - star[0].getHeight()) < 0.0f)
 			{
 				aY =0;
@@ -396,7 +389,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			}
 			// Check Y axis values
 			if(SenseData[1] >= 1){
-				aX += 10;
+				//aX += 10;
 				
 				if(aX + star[0].getWidth() > ScreenWidth)
 				{
@@ -405,7 +398,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			}
 			else if(SenseData[1] <= -1){
 				
-				aX -= 10;
+				//aX -= 10;
 				if((aX - star[0].getWidth()) < 0.0f)
 				{
 					aX =0;
@@ -417,6 +410,25 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
 			// TODO Auto-generated method stub
 			
 		}
