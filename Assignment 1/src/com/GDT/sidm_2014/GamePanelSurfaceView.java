@@ -25,21 +25,26 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
-public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
-
+public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener{
+		public int aX = 80, aY=80;
+		public int bX = 0, bY=50;
 		public float Volumes=1.0f;
 		private SoundPool sounds;
 		private int soundcorrect, soundwrong, soundbonus;
-
+		private final SensorManager sensor;
 		public Vibrator v;
 		MediaPlayer bgm;
 		//private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
 		//private Objects PauseB1;
 		//private Objects PauseB2;
-		private Bitmap[] star = new Bitmap[1];
+		private Bitmap[] star = new Bitmap[2];
 		//Chatroom stuff
 		private ChatRoom[] theChatRooms = new ChatRoom[4];
 		private static long timeLastCheck = System.currentTimeMillis();	
@@ -58,6 +63,12 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		public GamePanelSurfaceView (Context context){
 			// Context is the current state of the application/object
 			super(context);
+			
+			sensor = (SensorManager)
+					getContext().getSystemService(Context.SENSOR_SERVICE);
+					sensor.registerListener(this,
+					sensor.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0),
+					SensorManager.SENSOR_DELAY_NORMAL);
 			
 			//set things to get screen size
 			DisplayMetrics metrics= context.getResources().getDisplayMetrics();
@@ -82,6 +93,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			theChatRooms[2] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
 			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
+			star[1] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 
 			myThread = new GameThread(getHolder(), this);
 			
@@ -145,7 +157,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			paint.setTextSize(30);
 			if(Mode==1)
 			{
-			canvas.drawText(string +" " +Scoreno, ScreenWidth/2, 50, paint);
+			canvas.drawText(string +" " +aX, ScreenWidth/2, 50, paint);
 			}
 			else
 			{
@@ -277,6 +289,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			if(Scoreno>=0)
 			{
 				displaytext(canvas, "Score", 1);
+				canvas.drawBitmap(star[0], aX, aY,null);
+				canvas.drawBitmap(star[1], bX, bY,null);
 			}
 			/*P_sprite.draw(canvas);
 			P_sprite.setY(600);
@@ -351,5 +365,61 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 			return true;
 		}
+
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			// TODO Auto-generated method stub
+			float [ ] SenseData = event.values;
+			if (CheckCollision(bX,bY,star[1].getWidth(),star[1].getHeight(),
+			aX,aY,star[0].getWidth(),star[0].getHeight()))
+			{
+					Random r = new Random();
+					bX = r.nextInt(ScreenWidth);
+					bY = r.nextInt(ScreenHeight);
+			}
+			// Check X axis values i.e. 0 = X axis, 1 = Y axis.
+			if(SenseData[0] >= 1){ // if positive x-data exceeds +1,
+			aY+= 10; // object moves leftwards.
+			if(aY + star[0].getHeight() > ScreenHeight)
+			{
+				aY = ScreenHeight-10;
+			}
+			}
+			else if(SenseData[0] <= -1){ // if negative x-data exceeds -1,
+			aY-= 10; // object moves rightwards.
+			if((aY - star[0].getHeight()) < 0.0f)
+			{
+				aY =0;
+				
+			}
+			}
+			// Check Y axis values
+			if(SenseData[1] >= 1){
+				aX += 10;
+				
+				if(aX + star[0].getWidth() > ScreenWidth)
+				{
+					aX = ScreenWidth-10;
+				}
+			}
+			else if(SenseData[1] <= -1){
+				
+				aX -= 10;
+				if((aX - star[0].getWidth()) < 0.0f)
+				{
+					aX =0;
+					
+				}
+			}
+		}
+
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 		
 }
