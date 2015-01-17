@@ -3,6 +3,7 @@ package com.GDT.sidm_2014;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
