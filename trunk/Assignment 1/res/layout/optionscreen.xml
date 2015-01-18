@@ -23,40 +23,44 @@
         android:layout_marginRight="61dp"
         android:layout_toLeftOf="@+id/seekBar1"
         android:text="Volume" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_back"
-        android:layout_alignLeft="@+id/textView1"
-        android:text="Difficulty" />
-
-    <RadioButton
-        android:id="@+id/radioButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignRight="@+id/seekBar1"
-        android:text="Normal" />
-
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/radioButton1"
-        android:layout_alignBottom="@+id/radioButton1"
-        android:layout_marginRight="16dp"
-        android:layout_toLeftOf="@+id/radioButton1"
-        android:text="Easy" />
-
-    <SeekBar
+     <SeekBar
         android:id="@+id/seekBar1"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+		android:layout_centerInParent="true"
         android:layout_marginRight="41dp" />
+
+ <RadioGroup
+     android:id="@+id/Diffuculty"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_alignLeft="@+id/textView1"
+     android:layout_alignRight="@+id/seekBar1"
+     android:layout_below="@+id/seekBar1"
+     android:layout_marginEnd="41dp" 
+     android:layout_marginRight="41dp">
+
+     <TextView
+         android:id="@+id/textView2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Difficulty" />
+
+     <RadioButton
+         android:id="@+id/EasyButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@+id/NormalButton"
+         android:text="Easy" />
+
+     <RadioButton
+         android:id="@+id/NormalButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Normal" />
+ </RadioGroup>
+ 
+ 
 
 </RelativeLayout>

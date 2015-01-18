@@ -34,14 +34,14 @@ import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener, OnSeekBarChangeListener{
-		public static MediaPlayer bgm;
+		
 		public int aX = 80, aY=80;
 		public int bX = 0, bY=50;
 		private SoundPool sounds;
 		private int soundcorrect, soundwrong, soundbonus;
 		private final SensorManager sensor;
 		public Vibrator v;
-		public static float BgmVolume=0.0f;
+		
 		//private boolean pausepress=true;
 		private GameThread myThread = null; // Thread to control the rendering
 		//private Objects PauseB1;
@@ -99,9 +99,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 			myThread = new GameThread(getHolder(), this);
 			
-			bgm = MediaPlayer.create(context, R.raw.friction);
-			bgm.setVolume(BgmVolume, BgmVolume);
-			bgm.start();
+		
 			
 			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
 			soundcorrect = sounds.load(context,  R.raw.correct,1);
