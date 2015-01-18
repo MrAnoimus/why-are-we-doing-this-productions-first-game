@@ -11,6 +11,8 @@ import android.view.WindowManager;
 
 public class Splashpage extends Activity {
 	public static float BgmVolume=0.0f;
+	public static boolean Easy = true;
+	public static boolean Normal = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

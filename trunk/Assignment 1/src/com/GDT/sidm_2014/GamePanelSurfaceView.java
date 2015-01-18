@@ -34,7 +34,7 @@ import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener, OnSeekBarChangeListener{
-		
+		public int noOfRooms;
 		public int aX = 80, aY=80;
 		public int bX = 0, bY=50;
 		private SoundPool sounds;
@@ -198,6 +198,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		
 		public void update(){	
 			
+			if(Splashpage.Easy==true&&Splashpage.Normal==false)
+			{
+				noOfRooms=2;
+			}
+			else
+			{
+				noOfRooms=4;
+			}
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
@@ -212,7 +220,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				}
 				
 				
-				for(int i = 0; i < 4; ++i){
+				for(int i = 0; i < noOfRooms; ++i){
 					//Only update rooms when there isn't a max number of active rooms
 					if(activeWarningRooms < maxWarnings)
 					{
@@ -236,7 +244,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			}
 			
 			//Update chatrooms
-			for(int i = 0; i < 4; ++i){
+			for(int i = 0; i < noOfRooms; ++i){
 				theChatRooms[i].update();
 			}
 		}
@@ -295,7 +303,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			*/
 			
 			//Draw chatrooms
-			for(int i = 0; i < 4; ++i){
+			for(int i = 0; i < noOfRooms; ++i){
 				theChatRooms[i].draw(canvas);
 			}
 		//	canvas.drawBitmap(Back.getBitmap(), 10, ScreenHeight-(ScreenHeight/4), null);
@@ -321,7 +329,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			{
 			case MotionEvent.ACTION_DOWN:
 				
-				for(int i = 0; i < 4; ++i){
+				for(int i = 0; i < noOfRooms; ++i){
 					Objects tempObj = theChatRooms[i].getObjects();
 					if(CheckCollision(tempObj.getX(),tempObj.getY(),tempObj.getSpriteWidth(),tempObj.getSpriteHeight(), X,Y,0,0))
 					{

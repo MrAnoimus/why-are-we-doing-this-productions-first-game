@@ -22,11 +22,11 @@ import android.widget.TextView;
 
 public class OptionScreen extends Activity implements OnClickListener, OnSeekBarChangeListener{
 	private RadioGroup DifficultyGroup;
-	private RadioButton DifficultyButton;
+	private RadioButton DifficultyButton, Easy, Normal;
 	private SeekBar bar;
 	private Button btn_back;
 	private TextView textProgress, textAction;
-	
+	int SelectedId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +43,17 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		bar.setOnSeekBarChangeListener(this);
 		bar.setMax(100);
 		//bar.setProgress(0);
-		
+		Easy=(RadioButton) findViewById(R.id.EasyButton);
+		Normal=(RadioButton) findViewById(R.id.NormalButton);
+		if(Splashpage.Easy==true)
+		{
+			Easy.setChecked(true);
+		}
+		if(Splashpage.Normal==true)
+		{
+			Normal.setChecked(true);
+		}
+		AddListenerOnButton();
 		
 		textProgress = (TextView)findViewById(R.id.textView1);
 		textProgress.setText("Volume Level "+ConvertFloatToInt(Splashpage.BgmVolume)+"%");
@@ -52,14 +62,36 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	{
 		DifficultyGroup =(RadioGroup)findViewById(R.id.Diffuculty);
 	}
+	
+	
+	//@Override
+    //public void onBackPressed() {
+       //  boolean fromNewActivity=true;
+	   //  Intent mainIntent = new Intent(getBaseContext(), GamePanelSurfaceView.class);
+	    // Bundle bundleObj = new Bundle();
+	    // bundleObj.putString("fromNewActivity", Boolean.toString(fromNewActivity));
+	    // mainIntent.putExtras(bundleObj);
+	    // startActivityForResult(mainIntent, 0);
+	   //  finish();
+        //}
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if(v == btn_back){
+		if(v == btn_back)
+		{
 			finish();
-		int SelectedId = DifficultyGroup.getCheckedRadioButtonId();
+		}
+		SelectedId = DifficultyGroup.getCheckedRadioButtonId();
 		DifficultyButton =(RadioButton)findViewById(SelectedId);
-		
-	}
+		if(Easy.isChecked())
+		{
+			Splashpage.Easy=true;
+			Splashpage.Normal=false;
+		}
+		else if(Normal.isChecked())
+		{
+			Splashpage.Easy=false;
+			Splashpage.Normal=true;
+		}
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
@@ -77,6 +109,7 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	
 	@Override
 	protected void onDestroy(){
+		finish();
 		super.onDestroy();
 	}
 	
