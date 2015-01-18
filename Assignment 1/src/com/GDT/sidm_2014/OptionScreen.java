@@ -12,6 +12,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -19,7 +21,8 @@ import android.widget.TextView;
 
 
 public class OptionScreen extends Activity implements OnClickListener, OnSeekBarChangeListener{
-
+	private RadioGroup DifficultyGroup;
+	private RadioButton DifficultyButton;
 	private SeekBar bar;
 	private Button btn_back;
 	private TextView textProgress, textAction;
@@ -36,11 +39,28 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		btn_back.setOnClickListener(this);
 		
 		bar =(SeekBar)findViewById(R.id.seekBar1); //
+		bar.setProgress(ConvertFloatToInt(Splashpage.BgmVolume));
 		bar.setOnSeekBarChangeListener(this);
-		//bar.setProgress((int) GamePanelSurfaceView.BgmVolume);
+		bar.setMax(100);
+		//bar.setProgress(0);
+		
+		
 		textProgress = (TextView)findViewById(R.id.textView1);
+		textProgress.setText("Volume Level "+ConvertFloatToInt(Splashpage.BgmVolume)+"%");
 	}
-
+	public void AddListenerOnButton()
+	{
+		DifficultyGroup =(RadioGroup)findViewById(R.id.Diffuculty);
+	}
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		if(v == btn_back){
+			finish();
+		int SelectedId = DifficultyGroup.getCheckedRadioButtonId();
+		DifficultyButton =(RadioButton)findViewById(SelectedId);
+		
+	}
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 	//return false;
@@ -59,26 +79,24 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	protected void onDestroy(){
 		super.onDestroy();
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if(v == btn_back){
-			finish();
-		
-	}
 	
+	
+	
+	public int ConvertFloatToInt(float Value)
+	{
+		float ReturnValue = (Value*100);
+		return (int)ReturnValue;
 	}
-
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		
 		// TODO Auto-generated method stub
 		float Volume=(float) progress/100;
-		textProgress.setText("The Value is: "+GamePanelSurfaceView.BgmVolume);
-		GamePanelSurfaceView.BgmVolume = Volume;
-		GamePanelSurfaceView.bgm.setVolume(GamePanelSurfaceView.BgmVolume, GamePanelSurfaceView.BgmVolume);
+		
+		Splashpage.BgmVolume = Volume;
+		MainMenu.bgm.setVolume(Splashpage.BgmVolume, Splashpage.BgmVolume);
+		textProgress.setText("Volume Level "+ConvertFloatToInt(Splashpage.BgmVolume)+"%");
 	}
 
 	@Override
@@ -92,9 +110,12 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 	public void Update()
 	{
 		
 	}
+	
 }
 

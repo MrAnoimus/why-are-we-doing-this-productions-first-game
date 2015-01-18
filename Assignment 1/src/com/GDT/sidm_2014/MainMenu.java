@@ -2,6 +2,7 @@ package com.GDT.sidm_2014;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,7 @@ import android.widget.Button;
 
 
 public class MainMenu extends Activity implements OnClickListener{
+	public static MediaPlayer bgm;
 	
 	private Button btn_start;
 	private Button btn_help;
@@ -32,6 +34,10 @@ public class MainMenu extends Activity implements OnClickListener{
 		
 		btn_option = (Button)findViewById(R.id.btn_option);
 		btn_option.setOnClickListener(this);
+		
+		bgm = MediaPlayer.create(getBaseContext(), R.raw.friction);
+		bgm.setVolume(Splashpage.BgmVolume, Splashpage.BgmVolume);
+		bgm.start();
 	}
 	
 	
