@@ -333,11 +333,11 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					Objects tempObj = theChatRooms[i].getObjects();
 					if(CheckCollision(tempObj.getX(),tempObj.getY(),tempObj.getSpriteWidth(),tempObj.getSpriteHeight(), X,Y,0,0))
 					{
-						
+						startvibrate();
 						if(theChatRooms[i].getWarning())
 						{
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
-							startvibrate();
+							
 							Scoreno +=10;
 							theChatRooms[i].setWarning(false);
 							--activeWarningRooms;
@@ -362,10 +362,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					break;
 				
 			case MotionEvent.ACTION_MOVE:
-
 				break;
 			case MotionEvent.ACTION_UP:
-				stopVibrate();
+				//stopVibrate();
 				break;
 			}
 			
