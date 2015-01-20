@@ -59,7 +59,11 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		private short bgX=0, bgY=0;
 		int ScreenWidth ;
 		int ScreenHeight ;
-		int Scoreno =0;
+		int Scoreno = 0;
+		
+		//For chatbox verification
+		private Objects tick, cross;
+		private int OpenedChatRoomID = -1;
 		
 		//constructor for this GamePanelSurfaceView class
 		public GamePanelSurfaceView (Context context){
@@ -97,6 +101,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 			star[1] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 
+			tick = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.tick), 500, 750);
+			cross = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.cross), 1000, 750);
+			
 			myThread = new GameThread(getHolder(), this);
 			
 		
@@ -106,6 +113,17 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			soundwrong = sounds.load(context,R.raw.incorrect, 1);
 			// Make the GamePanel focusable so it can handle events
 			setFocusable(true);
+			
+			if(OptionScreen.getDifficulty() == 1)
+			{
+				maxWarnings = 1;
+				noOfRooms=2;
+			}
+			else
+			{
+				maxWarnings = 2;
+				noOfRooms=4;
+			}
 		}
 
 		
@@ -196,31 +214,21 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return false;
 		}
 		
-		public void update(){	
-			
-			if(Splashpage.Easy==true&&Splashpage.Normal==false)
-			{
-				noOfRooms=2;
-			}
-			else
-			{
-				noOfRooms=4;
-			}
+		public void update(){
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
 				bgY=0; 
 			}
 			
-			//try and activate chatrooms every second
-			if(System.currentTimeMillis()-timeLastCheck > 1000){
-				if(Scoreno<0)
-				{
-					Scoreno=0;
-				}
-				
-				
-				for(int i = 0; i < noOfRooms; ++i){
+			if(Scoreno<0)
+			{
+				Scoreno=0;
+			}
+			
+			for(int i = 0; i < noOfRooms; ++i){
+				//try and activate chatrooms every second
+				if(System.currentTimeMillis()-timeLastCheck > 1000){
 					//Only update rooms when there isn't a max number of active rooms
 					if(activeWarningRooms < maxWarnings)
 					{
@@ -229,16 +237,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 							++activeWarningRooms;
 						}
 					}
-					
-					
-					if(theChatRooms[i].getWarning()==true)
-					{
+				}
+				
+				//If not tapped within 3s, score-10
+				if(theChatRooms[i].getWarning()==true)
+				{
 					if(System.currentTimeMillis()-(theChatRooms[i].getTimeActive())>3000)
-						{
+					{
 						theChatRooms[i].setWarning(false);
 						Scoreno-=10;
 						--activeWarningRooms;
-						}
 					}
 				}
 			}
@@ -262,49 +270,59 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				canvas.drawBitmap(bg,bgX,bgY,null);
 				canvas.drawBitmap(bg,bgX,bgY+ScreenHeight,null);
 				
-		// 8) Draw the spaceships
 			/*
 			canvas.drawBitmap(ship[shipIndex], mX, mY, null);
 			canvas.drawBitmap(stone[shipIndex], aX, aY, null);
 			*/
-			if(Scoreno>=300)
-			{
-				displaytext(canvas, "Score", 2);
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+58, 50,null);
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+88, 50,null);
 				
+			//Draw ChatRoom's chatbox if opened
+			if(OpenedChatRoomID > -1){
+				//theChatRooms[OpenedChatRoomID].getChatBox().draw(canvas);
+				
+				canvas.drawBitmap(tick.getBitmap(), tick.getX(), tick.getY(), null);
+				canvas.drawBitmap(cross.getBitmap(), cross.getX(), cross.getY(), null);
 			}
-			if(Scoreno>=200)
-			{
-				
-				displaytext(canvas, "Score", 1);
-				
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+58, 50,null);
-				
-			}
-			if(Scoreno>=100)
-			{
-				displaytext(canvas, "Score", 1);
-				
-				canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
-		
-				
-			}
-			if(Scoreno>=0)
-			{
-				displaytext(canvas, "Score", 1);
-				canvas.drawBitmap(star[0], aX, aY,null);
-				canvas.drawBitmap(star[1], bX, bY,null);
-			}
-			/*P_sprite.draw(canvas);
-			P_sprite.setY(600);
-			*/
+			//Else draw main game screen
+			else{
+				if(Scoreno>=300)
+				{
+					displaytext(canvas, "Score", 2);
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+58, 50,null);
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+88, 50,null);
+					
+				}
+				if(Scoreno>=200)
+				{
+					
+					displaytext(canvas, "Score", 1);
+					
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+58, 50,null);
+					
+				}
+				if(Scoreno>=100)
+				{
+					displaytext(canvas, "Score", 1);
+					
+					canvas.drawBitmap(star[0], (ScreenWidth/2)+28, 50,null);
 			
-			//Draw chatrooms
-			for(int i = 0; i < noOfRooms; ++i){
-				theChatRooms[i].draw(canvas);
+					
+				}
+				if(Scoreno>=0)
+				{
+					displaytext(canvas, "Score", 1);
+					canvas.drawBitmap(star[0], aX, aY,null);
+					canvas.drawBitmap(star[1], bX, bY,null);
+				}
+				/*P_sprite.draw(canvas);
+				P_sprite.setY(600);
+				*/
+				
+				//Draw chatrooms
+				for(int i = 0; i < noOfRooms; ++i){
+					theChatRooms[i].draw(canvas);
+				}
 			}
 		//	canvas.drawBitmap(Back.getBitmap(), 10, ScreenHeight-(ScreenHeight/4), null);
 			
@@ -329,32 +347,59 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			{
 			case MotionEvent.ACTION_DOWN:
 				
-				for(int i = 0; i < noOfRooms; ++i){
-					Objects tempObj = theChatRooms[i].getObjects();
-					if(CheckCollision(tempObj.getX(),tempObj.getY(),tempObj.getSpriteWidth(),tempObj.getSpriteHeight(), X,Y,0,0))
-					{
-						startvibrate();
-						if(theChatRooms[i].getWarning())
-						{
+				//Detect touch for 'tick' and 'cross' buttons if chatroom is opened
+				if(OpenedChatRoomID > -1){
+					if(CheckCollision(tick.getX(), tick.getY(), tick.getSpriteWidth(), tick.getSpriteHeight(), X,Y,0,0)){
+						if(theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
-							
-							Scoreno +=10;
-							theChatRooms[i].setWarning(false);
-							--activeWarningRooms;
-							
+							Scoreno += 10;
 						}
-						else
-						{
-							//sounds.play(soundwrong, 1.0f, 1.0f, 0, 0, 1.5f);
-							Scoreno -=10;
+						else{
+							Scoreno -= 10;
 						}
+						theChatRooms[OpenedChatRoomID].setWarning(false);
+						--activeWarningRooms;
+						theChatRooms[OpenedChatRoomID].setScam(false);
+						OpenedChatRoomID = -1;
 					}
-					else
-					{
-						//stopVibrate();
+					else if(CheckCollision(cross.getX(), cross.getY(), cross.getSpriteWidth(), cross.getSpriteHeight(), X,Y,0,0)){
+						if(!theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
+							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
+							Scoreno += 10;
+						}
+						else{
+							Scoreno -= 10;
+						}
+						theChatRooms[OpenedChatRoomID].setWarning(false);
+						--activeWarningRooms;
+						theChatRooms[OpenedChatRoomID].setScam(false);
+						OpenedChatRoomID = -1;
 					}
-
 				}
+				//Else detect touch for chatrooms
+				else{
+					for(int i = 0; i < noOfRooms; ++i){
+						Objects tempObj = theChatRooms[i].getObjects();
+						if(CheckCollision(tempObj.getX(),tempObj.getY(),tempObj.getSpriteWidth(),tempObj.getSpriteHeight(), X,Y,0,0))
+						{
+							
+							if(theChatRooms[i].getWarning())
+							{
+								sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
+								startvibrate();
+								Scoreno +=10;
+								OpenedChatRoomID = i;
+							}
+							else
+							{
+								//sounds.play(soundwrong, 1.0f, 1.0f, 0, 0, 1.5f);
+								Scoreno -=10;
+							}
+						}
+					}
+				}
+				
+				
 				if(event.getAction() == MotionEvent.ACTION_DOWN)
 				{ 
 				//check if the image is clicked on

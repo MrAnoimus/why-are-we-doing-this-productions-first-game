@@ -13,6 +13,7 @@ public class ChatRoom {
 	private Objects theChatRoom;
 	private boolean warning = false;
 	private long timeActive = 0;
+	private ChatBox theChatBox = new ChatBox();
 	
 	//To change texture color
 	private LightingColorFilter FilterWhite = new LightingColorFilter(Color.WHITE, 1),
@@ -33,9 +34,15 @@ public class ChatRoom {
 	public long getTimeActive(){
 		return timeActive;
 	}
+	public ChatBox getChatBox(){
+		return theChatBox;
+	}
 	
 	public void setWarning(boolean warning){
 		this.warning = warning;
+	}
+	public void setScam(boolean scam){
+		theChatBox.setScam(scam);
 	}
 	
 	public boolean TrySetActive(){
@@ -44,6 +51,7 @@ public class ChatRoom {
 		if(warning == false){
 			Random r = new Random();
 			if(r.nextInt(100) < 3){
+				theChatBox.TrySetActive();
 				warning = true;
 				timeActive = System.currentTimeMillis();
 				return true;

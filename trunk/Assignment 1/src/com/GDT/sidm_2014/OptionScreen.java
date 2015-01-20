@@ -23,6 +23,7 @@ import android.widget.TextView;
 public class OptionScreen extends Activity implements OnClickListener, OnSeekBarChangeListener{
 	private RadioGroup DifficultyGroup;
 	private RadioButton DifficultyButton, Easy, Normal;
+	private static short Difficulty = 1;
 	private SeekBar bar;
 	private Button btn_back;
 	private TextView textProgress, textAction;
@@ -45,11 +46,11 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		//bar.setProgress(0);
 		Easy=(RadioButton) findViewById(R.id.EasyButton);
 		Normal=(RadioButton) findViewById(R.id.NormalButton);
-		if(Splashpage.Easy==true)
+		if(Difficulty == 1)
 		{
 			Easy.setChecked(true);
 		}
-		if(Splashpage.Normal==true)
+		else if(Difficulty == 2)
 		{
 			Normal.setChecked(true);
 		}
@@ -84,13 +85,11 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		DifficultyButton =(RadioButton)findViewById(SelectedId);
 		if(Easy.isChecked())
 		{
-			Splashpage.Easy=true;
-			Splashpage.Normal=false;
+			Difficulty = 1;
 		}
 		else if(Normal.isChecked())
 		{
-			Splashpage.Easy=false;
-			Splashpage.Normal=true;
+			Difficulty = 2;
 		}
 	}
 	@Override
@@ -150,5 +149,8 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		
 	}
 	
+	public static short getDifficulty(){
+		return Difficulty;
+	}
 }
 
