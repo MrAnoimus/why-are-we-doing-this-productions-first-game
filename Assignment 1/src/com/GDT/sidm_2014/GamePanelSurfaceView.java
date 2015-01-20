@@ -166,7 +166,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		}
 		public void displaytext(Canvas canvas, String string, int Mode)
 		{
-			
 			Paint paint = new Paint();
 			paint.setARGB(255, 255, 255, 255);
 			paint.setStrokeWidth(100);
@@ -277,7 +276,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				
 			//Draw ChatRoom's chatbox if opened
 			if(OpenedChatRoomID > -1){
-				//theChatRooms[OpenedChatRoomID].getChatBox().draw(canvas);
+				theChatRooms[OpenedChatRoomID].getChatBox().draw(canvas);
 				
 				canvas.drawBitmap(tick.getBitmap(), tick.getX(), tick.getY(), null);
 				canvas.drawBitmap(cross.getBitmap(), cross.getX(), cross.getY(), null);
