@@ -33,13 +33,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
-public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener, OnSeekBarChangeListener{
+public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, OnSeekBarChangeListener{
 		public int noOfRooms;
 		public int aX = 80, aY=80;
 		public int bX = 0, bY=50;
 		private SoundPool sounds;
 		private int soundcorrect, soundwrong, soundbonus;
-		private final SensorManager sensor;
+		
 		public Vibrator v;
 		
 		//private boolean pausepress=true;
@@ -70,12 +70,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			// Context is the current state of the application/object
 			super(context);
 			
-			sensor = (SensorManager)
-					getContext().getSystemService(Context.SENSOR_SERVICE);
-					sensor.registerListener(this,
-					sensor.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0),
-					SensorManager.SENSOR_DELAY_NORMAL);
-			
 			//set things to get screen size
 			DisplayMetrics metrics= context.getResources().getDisplayMetrics();
 			ScreenWidth = metrics.widthPixels;
@@ -94,10 +88,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			//PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
 			
 			//Back = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_back),10,300);
-			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
+			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
 			theChatRooms[1] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
 			theChatRooms[2] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
-			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
+			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 			star[1] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 
@@ -172,7 +166,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			paint.setTextSize(30);
 			if(Mode==1)
 			{
-			canvas.drawText(string +" " +aX, ScreenWidth/2, 50, paint);
+			canvas.drawText(string +" " +Scoreno, ScreenWidth/2, 50, paint);
 			}
 			else
 			{
@@ -386,7 +380,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 							{
 								sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
 								startvibrate();
-								Scoreno +=10;
+								
 								OpenedChatRoomID = i;
 							}
 							else
@@ -416,52 +410,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		}
 
 
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			// TODO Auto-generated method stub
-			float [ ] SenseData = event.values;
-			// Check X axis values i.e. 0 = X axis, 1 = Y axis.
-			if(SenseData[0] >= 1){ // if positive x-data exceeds +1,
-			//aY+= 10; // object moves leftwards.
-			if(aY + star[0].getHeight() > ScreenHeight)
-			{
-				aY = ScreenHeight-10;
-			}
-			}
-			else if(SenseData[0] <= -1){ // if negative x-data exceeds -1,
-			//aY-= 10; // object moves rightwards.
-			if((aY - star[0].getHeight()) < 0.0f)
-			{
-				aY =0;
-				
-			}
-			}
-			// Check Y axis values
-			if(SenseData[1] >= 1){
-				//aX += 10;
-				
-				if(aX + star[0].getWidth() > ScreenWidth)
-				{
-					aX = ScreenWidth-10;
-				}
-			}
-			else if(SenseData[1] <= -1){
-				
-				//aX -= 10;
-				if((aX - star[0].getWidth()) < 0.0f)
-				{
-					aX =0;
-					
-				}
-			}
-		}
+		
 
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-			
-		}
+	
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
