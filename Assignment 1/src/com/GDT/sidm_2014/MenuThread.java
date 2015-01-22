@@ -7,9 +7,8 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 import android.graphics.Canvas;
 
-public class GameThread extends Thread {
+public class MenuThread extends Thread {
 	// The actual view that handles inputs and draws to the surface
-			private GamePanelSurfaceView myView;
 			private MainMenu menuView;
 			// Surface holder that can access the physical surface
 			private SurfaceHolder holder;
@@ -22,10 +21,10 @@ public class GameThread extends Thread {
 			short fps = 20;
 			
 			// Constructor for this class 
-			public GameThread(SurfaceHolder holder, GamePanelSurfaceView myView){
+			public MenuThread(SurfaceHolder holder, MainMenu myView){
 				super();
 				isRun =true; //for running
-				this.myView = myView;
+				this.menuView = myView;
 				this.holder = holder;
 				
 			}
@@ -62,14 +61,7 @@ public class GameThread extends Thread {
 						try {
 							c = holder.lockCanvas();
 							synchronized(holder){		
-								if(myView!=null)
-								{
-									if(getPause()==false)
-									{
-										myView.update();
-										myView.doDraw(c); 
-									}
-								}
+
 								if(menuView!=null)
 								{
 									if(getPause()==false)
