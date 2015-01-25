@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 
 public class MenuThread extends Thread {
 	// The actual view that handles inputs and draws to the surface
-			private MainMenu menuView;
+			public static MainMenu menuView;
 			// Surface holder that can access the physical surface
 			private SurfaceHolder holder;
 			
@@ -66,6 +66,7 @@ public class MenuThread extends Thread {
 								{
 									if(getPause()==false)
 									{
+										menuView.Update();
 										menuView.doDraw(c); 
 									}
 								}

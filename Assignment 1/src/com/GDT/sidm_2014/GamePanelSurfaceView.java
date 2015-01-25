@@ -100,8 +100,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 			myThread = new GameThread(getHolder(), this);
 			
-		
-			
 			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
 			soundcorrect = sounds.load(context,  R.raw.correct,1);
 			soundwrong = sounds.load(context,R.raw.incorrect, 1);
@@ -174,7 +172,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				canvas.drawText("Give A for Assignment Plox", ScreenWidth/2, 150, paint);
 			}
 		}
-		public boolean CheckCollision(int x1, int y1 ,int w1,int h1, int x2, int y2, int w2, int h2)
+		public static boolean CheckCollision(int x1, int y1 ,int w1,int h1, int x2, int y2, int w2, int h2)
 		{
 			if(x2>=x1 && x2<=x1+w1) //start to detect collision of the top left corner
 			{
@@ -408,11 +406,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 			return true;
 		}
-
-
-		
-
-	
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,

@@ -39,6 +39,7 @@
         
         
         
+        
 		<activity
 		    android:screenOrientation="landscape"
         	android:name=".HelpScreen">
@@ -49,6 +50,17 @@
         	android:name=".OptionScreen">
 		</activity>
         <activity android:name=".GamePage"
+             android:screenOrientation="landscape"  >
+            
+             <intent-filter> 
+                
+                 <action android:name="android.intent.action.MAIN" />
+                 
+                  <category android:name="android.intent.category.default" /> 
+                  </intent-filter>
+                   </activity>
+                   
+         <activity android:name=".MenuPage"
              android:screenOrientation="landscape"  >
             
              <intent-filter> 

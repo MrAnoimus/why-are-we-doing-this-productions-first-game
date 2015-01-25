@@ -24,7 +24,7 @@ public class Splashpage extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			Intent intent = new Intent(Splashpage.this, MainMenu.class);
+			Intent intent = new Intent(getBaseContext(), MenuPage.class);
 			startActivity(intent);
 		}
 		return true;
