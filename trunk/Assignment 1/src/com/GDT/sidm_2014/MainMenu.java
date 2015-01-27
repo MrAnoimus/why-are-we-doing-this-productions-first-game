@@ -38,7 +38,7 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 	int ScreenHeight ;
 	private Objects[] Buttons = new Objects[3];
 	
-	public MainMenu(Context context) {
+	public MainMenu(Context context, Activity activity) {
 		super(context);
 		sensor = (SensorManager)
 				getContext().getSystemService(Context.SENSOR_SERVICE);
@@ -68,6 +68,8 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 		getHolder().addCallback(this);
 		myThread = new MenuThread(getHolder(), this);
 		bg = BitmapFactory.decodeResource(getResources(),R.drawable.backgnd);
+		// To track an activity
+		MenuPage.activityTracker = activity; 
 	}
 	
 	
@@ -177,6 +179,9 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 	public void onClick(View v){	//check which button is pressed
 		Intent intent = new Intent();
 		
+        
+		
+	    
 		if(v == btn_start){
 			intent.setClass(getContext(), GamePage.class);
 			
@@ -187,7 +192,7 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 		else if(v == btn_option){
 			intent.setClass(getContext(), OptionScreen.class);
 		}
-		startActionMode((Callback) intent);
+		MenuPage.activityTracker.startActivity(intent);
 		
 	}
 	
@@ -205,14 +210,20 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 			if(GamePanelSurfaceView.CheckCollision(Buttons[0].getX(), Buttons[0].getY(), Buttons[0].getSpriteWidth(), Buttons[0].getSpriteHeight(), X,Y,0,0))
 			{
 				intent.setClass(getContext(), GamePage.class);
-				MenuThread.menuView=null;
 			}
-			
+			if(GamePanelSurfaceView.CheckCollision(Buttons[1].getX(), Buttons[1].getY(), Buttons[1].getSpriteWidth(), Buttons[1].getSpriteHeight(), X,Y,0,0))
+			{
+				intent.setClass(getContext(), OptionScreen.class);
+			}
+			if(GamePanelSurfaceView.CheckCollision(Buttons[2].getX(), Buttons[2].getY(), Buttons[2].getSpriteWidth(), Buttons[2].getSpriteHeight(), X,Y,0,0))
+			{
+				intent.setClass(getContext(), HelpScreen.class);
+			}
 			if(event.getAction() == MotionEvent.ACTION_DOWN)
 			{ 
 			//check if the image is clicked on
 			}
-			startActionMode((Callback) intent);
+			MenuPage.activityTracker.startActivity(intent);
 			
 				break;
 			
