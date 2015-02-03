@@ -8,10 +8,9 @@ import android.graphics.Paint;
 
 public class ChatBox {
 	
-	private string[] theChatHistory = new string[5];
+	private Conversation[] theChatHistory = new Conversation[5];
 	private boolean scam = false;
 
-	//Temp
 	//For text
 	private Paint paint = new Paint();
 	
@@ -47,7 +46,6 @@ public class ChatBox {
 			canvas.drawText("!Scam", 800, 400, paint);
 		}
 	}
-	
 	public void update(){
 		
 	}

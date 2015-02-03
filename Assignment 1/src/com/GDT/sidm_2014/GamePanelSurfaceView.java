@@ -3,6 +3,7 @@ package com.GDT.sidm_2014; // Note: Differs with your project name
 import android.R.string;
 import android.app.Activity;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 import android.content.Context;
@@ -65,6 +66,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		private Objects tick, cross;
 		private int OpenedChatRoomID = -1;
 		
+		//Conversation messages for chatboxes
+		private ConversationTextManager ConvoTextMgr;
+		
 		//constructor for this GamePanelSurfaceView class
 		public GamePanelSurfaceView (Context context){
 			// Context is the current state of the application/object
@@ -116,6 +120,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				maxWarnings = 2;
 				noOfRooms=4;
 			}
+			
+			//ConvoTextMgr = new ConversationTextManager(context);
 		}
 
 		

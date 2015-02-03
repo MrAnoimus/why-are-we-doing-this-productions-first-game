@@ -1,11 +1,16 @@
 package com.GDT.sidm_2014;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ActionMode.Callback;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,6 +20,8 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,6 +30,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import com.facebook.LoggingBehavior;
+
+import com.facebook.Request;
+
+import com.facebook.Response;
+
+import com.facebook.Session;
+
+import com.facebook.Session.OpenRequest;
+
+import com.facebook.SessionState;
+
+import com.facebook.Settings;
+
+import com.facebook.UiLifecycleHelper;
+
+import com.facebook.model.GraphUser;
+
+import com.facebook.widget.LoginButton;
+
+import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 
 public class MainMenu extends SurfaceView implements OnClickListener,SensorEventListener, SurfaceHolder.Callback{
 	public static MediaPlayer bgm;
@@ -69,9 +98,8 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 		myThread = new MenuThread(getHolder(), this);
 		bg = BitmapFactory.decodeResource(getResources(),R.drawable.backgnd);
 		// To track an activity
-		MenuPage.activityTracker = activity; 
+		MenuPage.activityTracker = activity;
 	}
-	
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -104,7 +132,6 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 				
 			}
 		}
-	
 	}
 	public void displaytext(Canvas canvas, String string, int Mode)
 	{
