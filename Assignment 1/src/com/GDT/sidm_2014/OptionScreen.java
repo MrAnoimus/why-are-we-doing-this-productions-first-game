@@ -67,7 +67,7 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		super.onCreate(savedInstanceState);
 		
 		uiHelper = new UiLifecycleHelper(this, statusCallback);
-        uiHelper.onCreate(savedInstanceState);
+		uiHelper.onCreate(savedInstanceState);
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// hide title
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hide top bar
