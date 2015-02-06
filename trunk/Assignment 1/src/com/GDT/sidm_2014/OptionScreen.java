@@ -36,6 +36,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.Session.OpenRequest;
+import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.UiLifecycleHelper;
@@ -135,50 +136,55 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	    } catch (NoSuchAlgorithmException e) {
 
 	    }
+		if(Session.openActiveSession(this, false, statusCallback) == null){
+		    //Start login activity
+		}
+		
 	}
 	
 	public void ConnectFacebook() {
-	     Log.v(TAG,"test");
-	     Session session = new Session(this);
-	     Session.setActiveSession(session);
-	     Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-	     Session.StatusCallback statusCallback = new Session.StatusCallback() {
+    	Log.v(TAG,"test");
+        Session session = new Session(this);
+        Session.setActiveSession(session);
 
-		     @Override
-		     public void call(Session session, SessionState state, Exception exception) {
-	
-		    	 String message = "Facebook session status changed - " + session.getState() + " - Exception: " + exception;
-		    	 Toast.makeText(OptionScreen.this, message, Toast.LENGTH_SHORT).show();
-		    	 Log.w("Facebook test", message);
-		    	 
-		    	 if (session.isOpened() || session.getPermissions().contains("publish_actions")) {
-		    		 postStatusMessage();
-		    	 }
-		    	 else if (session.isOpened()) {
-		    		 OpenRequest open = new OpenRequest(OptionScreen.this).setCallback(this);
-		    		 List<String> permission = new ArrayList<String>();
-		    		 permission.add("publish_actions");
-		    		 open.setPermissions(permission);
-		    		 Log.w("Facebook test", "Open for publish");
-		    		 session.openForPublish(open);
-		    	 }
-		    	 else{
-		    		 Log.w("Facebook test", "Unable to publish");
-		    	 }
-		     }
-	     };
-	     
-	     if (!session.isOpened() && !session.isClosed() && session.getState() != SessionState.OPENING) {
-	    	 session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-	     }
-	     else {
-	    	 Log.w("Facebook test", "Open active session");
-	    	 Session.openActiveSession(this, true, statusCallback);
-	     }
-	}
+        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+
+        Session.StatusCallback statusCallback = new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                String message = "Facebook session status changed - " + session.getState() + " - Exception: " + exception;
+                Toast.makeText(OptionScreen.this, message, Toast.LENGTH_SHORT).show();
+                Log.w("Facebook test", message);
+               
+                if (session.isOpened() || session.getPermissions().contains("publish_actions")) {
+                	postStatusMessage();
+                } 
+                else if (session.isOpened()) {
+                    OpenRequest open = new OpenRequest(OptionScreen.this).setCallback(this);
+                    List<String> permission = new ArrayList<String>();
+                    permission.add("publish_actions");
+                    open.setPermissions(permission);
+                    Log.w("Facebook test", "Open for publish");
+                    session.openForPublish(open);
+                }
+                else{
+                	Log.w("Facebook test", "Unable to publish");
+                }
+            }
+        };
+
+        if (!session.isOpened() && !session.isClosed() && session.getState() != SessionState.OPENING) {
+            session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
+        } else {
+            Log.w("Facebook test", "Open active session");
+            Session.openActiveSession(this, true, statusCallback);
+        }
+    }
+    
 	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
 		@Override
-		public void call(Session session, SessionState state, Exception exception) {
+		public void call(Session session, SessionState state,
+				Exception exception) {
 			if (state.isOpened()) {
 				buttonsEnabled(true);
 				Log.d("FacebookSampleActivity", "Facebook session opened");
@@ -193,14 +199,17 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	}
 	public void postStatusMessage() {
 		if (checkPermissions()) {
-			Request request = Request.newStatusUpdateRequest(Session.getActiveSession(), message, new Request.Callback() {
-				@Override
-				public void onCompleted(Response response) {
-					if (response.getError() == null)
-						Toast.makeText(OptionScreen.this, "Status updated successfully", Toast.LENGTH_LONG).show();
-				}
-			});
-			
+			Request request = Request.newStatusUpdateRequest(
+					Session.getActiveSession(), message,
+					new Request.Callback() {
+						@Override
+						public void onCompleted(Response response) {
+							if (response.getError() == null)
+								Toast.makeText(OptionScreen.this,
+										"Status updated successfully",
+										Toast.LENGTH_LONG).show();
+						}
+					});
 			request.executeAsync();
 		} else {
 			requestPermissions();
@@ -208,7 +217,6 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	}
 	public boolean checkPermissions() {
 		Session s = Session.getActiveSession();
-		
 		if (s != null) {
 			return s.getPermissions().contains("publish_actions");
 		} else
@@ -216,9 +224,9 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	}
 	public void requestPermissions() {
 		Session s = Session.getActiveSession();
-		
 		if (s != null)
-			s.requestNewPublishPermissions(new Session.NewPermissionsRequest(this, PERMISSIONS));
+			s.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+					this, PERMISSIONS));
 	}
 	
 	
