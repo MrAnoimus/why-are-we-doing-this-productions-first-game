@@ -2,44 +2,49 @@ package com.GDT.sidm_2014;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Vector;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.SparseArray;
 
 public class ConversationTextManager {
-	AssetManager am;
+	InputStream is;
 	
-	SparseArray<String> Conversations;
-	SparseArray<String> ScamConversations;
+	private Vector<String> Conversations;
+	private Vector<String> ScamConversations;
 	
-	public ConversationTextManager(Context context) throws FileNotFoundException {
-		am = context.getAssets();
+	public ConversationTextManager(Context context) {		
+		Conversations = new Vector<String>();
+		ScamConversations = new Vector<String>();
 		
-		Conversations = new SparseArray<String>();
-		ScamConversations = new SparseArray<String>();
-		
-		ParseFile("text/Conversations.txt", Conversations);
-		ParseFile("text/ScamConversations.txt", ScamConversations);
+		ParseFile(context.getResources().openRawResource(R.raw.conversations), Conversations);
+		ParseFile(context.getResources().openRawResource(R.raw.scamconversations), ScamConversations);
 	}
 	
-	private void ParseFile(String filename, SparseArray<String> theList)throws FileNotFoundException {
-		File TheFile = new File(filename);
-		Scanner fileInput = new Scanner(TheFile);
+	private void ParseFile(InputStream input, Vector<String> theList) {
+		is = input;
+		Scanner fileInput = new Scanner(is);
 		
 		while(fileInput.hasNextLine()){
 			String line = fileInput.nextLine();
-			
-			theList.put(theList.size(), line);
+			theList.add(line);
 		}
 		
 		fileInput.close();
 	}
-
-	public String GetText(SparseArray<String> theList){
+	
+	public Conversation GetConversationText(){
 		Random r = new Random();
-		return theList.get(r.nextInt(theList.size()));
+		Conversation convo = new Conversation(false, Conversations.get(r.nextInt(Conversations.size())), null);
+		return convo;
+	}
+	public Conversation GetScamConversationText(){
+		Random r = new Random();
+		Conversation convo = new Conversation(true, ScamConversations.get(r.nextInt(ScamConversations.size())), null);
+		return convo;
 	}
 }

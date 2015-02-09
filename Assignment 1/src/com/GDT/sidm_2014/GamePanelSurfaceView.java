@@ -92,15 +92,15 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			//PauseB2 = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.pause),1,1);
 			
 			//Back = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_back),10,300);
-			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500);
-			theChatRooms[1] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500);
-			theChatRooms[2] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000);
-			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000);
+			theChatRooms[0] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,500, BitmapFactory.decodeResource(getResources(), R.drawable.chatbubble), 200, 650);
+			theChatRooms[1] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,500, BitmapFactory.decodeResource(getResources(), R.drawable.chatbubble), 200, 650);
+			theChatRooms[2] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),500,000, BitmapFactory.decodeResource(getResources(), R.drawable.chatbubble), 200, 650);
+			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000, BitmapFactory.decodeResource(getResources(), R.drawable.chatbubble), 200, 650);
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 			star[1] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 
-			tick = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.tick), 500, 750);
-			cross = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.cross), 1000, 750);
+			tick = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.tick), 500, 775);
+			cross = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.cross), 1000, 775);
 			
 			myThread = new GameThread(getHolder(), this);
 			
@@ -121,7 +121,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				noOfRooms=4;
 			}
 			
-			//ConvoTextMgr = new ConversationTextManager(context);
+			ConvoTextMgr = new ConversationTextManager(context);
 		}
 
 		
@@ -223,21 +223,41 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				Scoreno=0;
 			}
 			
+			Random r = new Random();
 			for(int i = 0; i < noOfRooms; ++i){
 				//try and activate chatrooms every second
 				if(System.currentTimeMillis()-timeLastCheck > 1000){
 					//Only update rooms when there isn't a max number of active rooms
 					if(activeWarningRooms < maxWarnings)
 					{
-						if(theChatRooms[i].TrySetActive()){
-							//A chatroom becomes active
-							++activeWarningRooms;
+						if(!theChatRooms[i].getWarning()){
+							//30% to get scam text
+							if (r.nextInt(100) < 30){
+								theChatRooms[i].setText(ConvoTextMgr.GetScamConversationText());
+								theChatRooms[i].Activate();
+								//A chatroom becomes active
+								++activeWarningRooms;
+							}
+							//Else try to get false warning
+							else{
+								theChatRooms[i].setText(ConvoTextMgr.GetConversationText());
+								
+								if(theChatRooms[i].TrySetActive()){
+									//A chatroom becomes active
+									++activeWarningRooms;
+								}
+							}
 						}
+					}
+					else{
+						//Do not allow chatrooms with warning to get more text
+						if(!theChatRooms[i].getWarning())
+							theChatRooms[i].setText(ConvoTextMgr.GetConversationText());
 					}
 				}
 				
 				//If not tapped within 3s, score-10
-				if(theChatRooms[i].getWarning()==true)
+				if(theChatRooms[i].getWarning()==true && OpenedChatRoomID != i)
 				{
 					if(System.currentTimeMillis()-(theChatRooms[i].getTimeActive())>3000)
 					{
@@ -247,6 +267,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 					}
 				}
 			}
+			
+			//Update timeLastCheck
+			if(System.currentTimeMillis()-timeLastCheck > 1000)
+				timeLastCheck = System.currentTimeMillis();
 			
 			//Update chatrooms
 			for(int i = 0; i < noOfRooms; ++i){
@@ -346,6 +370,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				
 				//Detect touch for 'tick' and 'cross' buttons if chatroom is opened
 				if(OpenedChatRoomID > -1){
+					//Tick button
 					if(CheckCollision(tick.getX(), tick.getY(), tick.getSpriteWidth(), tick.getSpriteHeight(), X,Y,0,0)){
 						if(theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
@@ -356,9 +381,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						}
 						theChatRooms[OpenedChatRoomID].setWarning(false);
 						--activeWarningRooms;
-						theChatRooms[OpenedChatRoomID].setScam(false);
+						theChatRooms[OpenedChatRoomID].Deactivate();
 						OpenedChatRoomID = -1;
 					}
+					//Cross button
 					else if(CheckCollision(cross.getX(), cross.getY(), cross.getSpriteWidth(), cross.getSpriteHeight(), X,Y,0,0)){
 						if(!theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
@@ -369,7 +395,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						}
 						theChatRooms[OpenedChatRoomID].setWarning(false);
 						--activeWarningRooms;
-						theChatRooms[OpenedChatRoomID].setScam(false);
+						theChatRooms[OpenedChatRoomID].Deactivate();
 						OpenedChatRoomID = -1;
 					}
 				}
