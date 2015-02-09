@@ -28,6 +28,14 @@ public class Objects {
 		sourceRect = new Rect(0, 0, spriteWidth, spriteHeight);
 
 	}
+	public Objects(Objects obj){
+		this.bitmap = obj.bitmap;
+		this.x = obj.x;
+		this.y = obj.y;
+		spriteWidth = bitmap.getWidth();
+		spriteHeight = bitmap.getHeight();
+		sourceRect = new Rect(0, 0, spriteWidth, spriteHeight);
+	}
 
 	public Bitmap getBitmap() {
 		return bitmap;
