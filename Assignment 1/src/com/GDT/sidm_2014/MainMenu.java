@@ -54,6 +54,7 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 
 public class MainMenu extends SurfaceView implements OnClickListener,SensorEventListener, SurfaceHolder.Callback{
+	
 	public static MediaPlayer bgm;
 	private MenuThread myThread = null;
 	private SensorManager sensor;
@@ -65,7 +66,7 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 	public int bX = 0, bY=0;
 	int ScreenWidth ;
 	int ScreenHeight ;
-	private Objects[] Buttons = new Objects[3];
+	private Objects[] Buttons = new Objects[4];
 	
 	public MainMenu(Context context, Activity activity) {
 		super(context);
@@ -81,6 +82,7 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 		Buttons[0] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_start), (int) ((ScreenWidth/2)*(0.8)), ((ScreenHeight/4)*3));
 		Buttons[1] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_options), (int) ((ScreenWidth/4)*(0.01)), (int) ((ScreenHeight/4)*2.75));
 		Buttons[2] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.button_help), ((ScreenWidth/4)*3), ((ScreenHeight/4)*3));
+		Buttons[3] = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.leaderboards), ((ScreenWidth/4)*3), ((ScreenHeight/4)*2));
 		
 		btn_start = (Button)findViewById(R.id.btn_start);
 	//	btn_start.setOnClickListener(this);
@@ -195,8 +197,8 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 		}
 		
 		canvas.drawBitmap(bg,aX+bX,aY+bY,null);
-		displaytext(canvas, "Tada", 1);
-		for(int i = 0; i < 3; ++i){
+		
+		for(int i = 0; i < 4; ++i){
 
 			Buttons[i].draw(canvas);
 		}
@@ -237,20 +239,27 @@ public class MainMenu extends SurfaceView implements OnClickListener,SensorEvent
 			if(GamePanelSurfaceView.CheckCollision(Buttons[0].getX(), Buttons[0].getY(), Buttons[0].getSpriteWidth(), Buttons[0].getSpriteHeight(), X,Y,0,0))
 			{
 				intent.setClass(getContext(), GamePage.class);
+				MenuPage.activityTracker.startActivity(intent);
 			}
 			if(GamePanelSurfaceView.CheckCollision(Buttons[1].getX(), Buttons[1].getY(), Buttons[1].getSpriteWidth(), Buttons[1].getSpriteHeight(), X,Y,0,0))
 			{
 				intent.setClass(getContext(), OptionScreen.class);
+				MenuPage.activityTracker.startActivity(intent);
 			}
 			if(GamePanelSurfaceView.CheckCollision(Buttons[2].getX(), Buttons[2].getY(), Buttons[2].getSpriteWidth(), Buttons[2].getSpriteHeight(), X,Y,0,0))
 			{
 				intent.setClass(getContext(), HelpScreen.class);
+				MenuPage.activityTracker.startActivity(intent);
+			}
+			if(GamePanelSurfaceView.CheckCollision(Buttons[3].getX(), Buttons[3].getY(), Buttons[3].getSpriteWidth(), Buttons[3].getSpriteHeight(), X,Y,0,0))
+			{
+				Toast.makeText(getContext(), "HighScore:"+MenuPage.currentHighscore, Toast.LENGTH_SHORT).show();
 			}
 			if(event.getAction() == MotionEvent.ACTION_DOWN)
 			{ 
 			//check if the image is clicked on
 			}
-			MenuPage.activityTracker.startActivity(intent);
+			
 			
 				break;
 			
