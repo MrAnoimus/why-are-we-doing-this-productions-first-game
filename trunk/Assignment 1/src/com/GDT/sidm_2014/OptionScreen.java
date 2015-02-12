@@ -62,6 +62,7 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 	private static final String TAG = null;
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static String message = "I am playing Scannzers right now!";
+	//for facebook
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,7 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		
 		buttonsEnabled(true);
 		
-		try {
+		/*try {
 	        PackageInfo info = getPackageManager().getPackageInfo(
 	                "com.GDT.sidm_2014", 
 	                PackageManager.GET_SIGNATURES);
@@ -139,7 +140,7 @@ public class OptionScreen extends Activity implements OnClickListener, OnSeekBar
 		if(Session.openActiveSession(this, false, statusCallback) == null){
 		    //Start login activity
 		}
-		
+		*/
 	}
 	
 	public void ConnectFacebook() {

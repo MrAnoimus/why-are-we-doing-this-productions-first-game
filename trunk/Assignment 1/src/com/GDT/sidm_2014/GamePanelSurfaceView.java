@@ -2,11 +2,13 @@ package com.GDT.sidm_2014; // Note: Differs with your project name
 
 import android.R.string;
 import android.app.Activity;
+import android.app.AlertDialog;
 
 import java.io.FileNotFoundException;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Toast;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,7 +38,9 @@ import android.hardware.SensorManager;
 //Implement this interface to receive information about changes to the surface.
 	
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, OnSeekBarChangeListener{
+		boolean gameOver=false;
 		public int noOfRooms;
+		public int health =3;
 		public int aX = 80, aY=80;
 		public int bX = 0, bY=50;
 		private SoundPool sounds;
@@ -48,6 +53,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		//private Objects PauseB1;
 		//private Objects PauseB2;
 		private Bitmap[] star = new Bitmap[2];
+		private Bitmap[] healthicon = new Bitmap[3];
 		//Chatroom stuff
 		private ChatRoom[] theChatRooms = new ChatRoom[4];
 		private static long timeLastCheck = System.currentTimeMillis();	
@@ -61,6 +67,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		int ScreenWidth ;
 		int ScreenHeight ;
 		int Scoreno = 0;
+		
+		AlertDialog.Builder alert = null;
+		Activity activityTracker2;
 		
 		//For chatbox verification
 		private Objects tick, cross;
@@ -98,11 +107,15 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			theChatRooms[3] = new ChatRoom(BitmapFactory.decodeResource(getResources(), R.drawable.chatroom),1000,000, BitmapFactory.decodeResource(getResources(), R.drawable.chatbubble), 200, 650);
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
 			star[1] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
+			healthicon[0] = BitmapFactory.decodeResource(getResources(),R.drawable.health);
+			healthicon[1] = BitmapFactory.decodeResource(getResources(),R.drawable.health);
+			healthicon[2] = BitmapFactory.decodeResource(getResources(),R.drawable.health);
 
 			tick = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.tick), 500, 775);
 			cross = new Objects(BitmapFactory.decodeResource(getResources(), R.drawable.cross), 1000, 775);
 			
 			myThread = new GameThread(getHolder(), this);
+			
 			
 			sounds = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
 			soundcorrect = sounds.load(context,  R.raw.correct,1);
@@ -124,7 +137,32 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			ConvoTextMgr = new ConversationTextManager(context);
 		}
 
-		
+		public void alertdialog()
+		{
+			alert = new AlertDialog.Builder(getContext());
+
+			alert.setMessage("Score: "+ Scoreno);
+
+			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					Intent intent = new Intent();
+		            
+	                intent.putExtra("Highscore", Scoreno);
+		            
+		            ((Activity) getContext()).setResult(Activity.RESULT_OK, intent);
+		            intent.setClass(getContext(), MenuPage.class);
+		            ((Activity)getContext()).startActivityForResult(intent, 1);
+		            ((Activity)getContext()).finish();
+					// TODO Auto-generated method stub
+					
+					
+					activityTracker2.startActivity(intent);
+				}
+			});
+			
+		}
 		//must implement inherited abstract methods
 		public void surfaceCreated(SurfaceHolder holder){
 			// Create the thread 
@@ -212,6 +250,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		}
 		
 		public void update(){
+			alertdialog();
 			bgY-=8; // Change the number of panning speed if number is larger, it moves faster.
 			if (bgY<-ScreenHeight) 
 			{ // Check if reaches 1280, if does, set bgX = 0. 
@@ -264,6 +303,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						theChatRooms[i].setWarning(false);
 						Scoreno-=10;
 						--activeWarningRooms;
+						Toast.makeText(getContext(), "Gameover", Toast.LENGTH_SHORT).show();
 					}
 				}
 			}
@@ -276,6 +316,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			for(int i = 0; i < noOfRooms; ++i){
 				theChatRooms[i].update();
 			}
+			
 		}
 				
 		
@@ -305,6 +346,24 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			}
 			//Else draw main game screen
 			else{
+				if(health>=3)
+				{
+					canvas.drawBitmap(healthicon[0], (ScreenWidth/2), 50,null);
+					canvas.drawBitmap(healthicon[1], (ScreenWidth/2)+healthicon[0].getWidth(), 50,null);
+					canvas.drawBitmap(healthicon[2], (ScreenWidth/2)+healthicon[0].getWidth()+healthicon[0].getWidth(), 50,null);
+					
+				}
+				if(health>=2)
+				{
+					canvas.drawBitmap(healthicon[0], (ScreenWidth/2), 50,null);
+					canvas.drawBitmap(healthicon[1], (ScreenWidth/2)+healthicon[0].getWidth(), 50,null);
+					
+					
+				}
+				if(health>=1)
+				{
+					canvas.drawBitmap(healthicon[0], (ScreenWidth/2), 50,null);
+				}
 				if(Scoreno>=300)
 				{
 					displaytext(canvas, "Score", 2);
@@ -333,12 +392,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				if(Scoreno>=0)
 				{
 					displaytext(canvas, "Score", 1);
-					canvas.drawBitmap(star[0], aX, aY,null);
-					canvas.drawBitmap(star[1], bX, bY,null);
 				}
-				/*P_sprite.draw(canvas);
-				P_sprite.setY(600);
-				*/
+				
 				
 				//Draw chatrooms
 				for(int i = 0; i < noOfRooms; ++i){
@@ -375,9 +430,18 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						if(theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
 							Scoreno += 10;
+							Toast.makeText(getContext(), "Right Choice, +10 Score", Toast.LENGTH_SHORT).show();
+							
 						}
 						else{
 							Scoreno -= 10;
+							health-=1;
+							Toast.makeText(getContext(), "Wrong Choice, -10 Score! Minus 1 Heath!", Toast.LENGTH_SHORT).show();
+							if(health<=0&&gameOver==false)
+							{
+								gameOver=true;
+								alert.show();
+							}
 						}
 						theChatRooms[OpenedChatRoomID].setWarning(false);
 						--activeWarningRooms;
@@ -389,9 +453,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 						if(!theChatRooms[OpenedChatRoomID].getChatBox().getScam()){
 							sounds.play(soundcorrect, 1.0f, 1.0f, 0, 0, 1.5f);
 							Scoreno += 10;
+							Toast.makeText(getContext(), "Right Choice, +10 Score", Toast.LENGTH_SHORT).show();
 						}
 						else{
 							Scoreno -= 10;
+							health-=1;
+							Toast.makeText(getContext(), "Wrong Choice, -10 Score! Minus 1 Heath!", Toast.LENGTH_SHORT).show();
+							if(health<=0&&gameOver==false)
+							{
+								alert.show();
+							}
 						}
 						theChatRooms[OpenedChatRoomID].setWarning(false);
 						--activeWarningRooms;
